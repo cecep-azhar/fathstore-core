@@ -1,0 +1,16 @@
+{
+  "name": "LMS WIJAD.com",
+  "short_name": "LMS WIJAD",
+  "description": "Islamic Learning Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006B3F",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

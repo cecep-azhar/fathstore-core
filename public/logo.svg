@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="100" fill="#006B3F"/>
+  
+  <!-- Book Icon -->
+  <path d="M60 60 L60 140 L100 130 L140 140 L140 60 L100 70 Z" fill="#D4AF37"/>
+  <line x1="100" y1="70" x2="100" y2="130" stroke="#006B3F" stroke-width="2"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="100" cy="50" r="8" fill="#D4AF37"/>
+  <circle cx="100" cy="150" r="8" fill="#D4AF37"/>
+  
+  <!-- Text -->
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">
+    LMS WIJAD
+  </text>
+</svg>
