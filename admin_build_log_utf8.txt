@@ -1,0 +1,112 @@
+﻿
+> fathstore-core@1.0.0 build:admin D:\01_WEB\01_Projects\fathstore-core
+> pnpm --filter @fathstore/admin build
+
+
+> @fathstore/admin@1.0.0 build D:\01_WEB\01_Projects\fathstore-core\apps\admin
+> next build
+
+Ôû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 52s
+  Running TypeScript ...
+node.exe : Failed to 
+compile.
+At C:\Program Files\nod
+ejs\pnpm.ps1:16 char:5
++     & 
+"$basedir/node$exe"  "$
+basedir/node_modules/pn
+pm/bin/pnpm.cjs"  ...
++     ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Failed to com   
+ pile.:String) [],     
+RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+
+.next/dev/types/validat
+or.ts:81:31
+Type error: Type 
+'typeof import("D:/01_W
+EB/01_Projects/fathstor
+e-core/apps/admin/app/(
+payload)/api/graphql/ro
+ute")' does not 
+satisfy the constraint 
+'RouteHandlerConfig<"/a
+pi/graphql">'.
+  Types of property 
+'GET' are incompatible.
+    Type '(config: Prom
+ise<SanitizedConfig>) 
+=> (request: Request) 
+=> Promise<Response>' 
+is not assignable to 
+type '(request: 
+NextRequest, context: 
+{ params: Promise<{}>; 
+}) => void | Response 
+| Promise<void | 
+Response>'.
+      Types of 
+parameters 'config' 
+and 'request' are 
+incompatible.
+        Type 
+'NextRequest' is 
+missing the following 
+properties from type 'P
+romise<SanitizedConfig>
+': then, catch, 
+finally, 
+[Symbol.toStringTag]
+
+[0m [90m 79 |[39m   
+type __IsExpected[33m<
+[39m[33mSpecific[39m
+ [36mextends[39m [33
+mRouteHandlerConfig[39
+m[33m<[39m[32m"/api/
+graphql"[39m[33m>>[3
+9m [33m=[39m 
+[33mSpecific[39m
+ [90m 80 |[39m   
+[36mconst[39m 
+handler [33m=[39m {} 
+[36mas[39m 
+[36mtypeof[39m [36mi
+mport[39m([32m"../../
+../app/(payload)/api/gr
+aphql/route.js"[39m)
+[31m[1m>[22m[39m[9
+0m 81 |[39m   type 
+__Check [33m=[39m __I
+sExpected[33m<[39m[3
+6mtypeof[39m 
+handler[33m>[39m
+ [90m    |[39m       
+                       
+ [31m[1m^[22m[39m
+ [90m 82 |[39m   
+[90m// @ts-ignore[39m
+ [90m 83 |[39m   
+type __Unused 
+[33m=[39m __Check
+ [90m 84 |[39m }[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null
+D:\01_WEB\01_Projects\fathstore-core\apps\admin:
+ÔÇëERR_PNPM_RECURSIVE_RUN_FIRST_FAILÔÇë @fathstore/admin@1.0.0 build: `next build`
+Exit status 1
+ÔÇëELIFECYCLEÔÇë Command failed with exit code 1.

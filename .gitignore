@@ -45,3 +45,6 @@ pnpm-debug.log*
 
 # Payload
 /media
+/apps/admin/.next
+/apps/store/.next
+/apps/member/.next

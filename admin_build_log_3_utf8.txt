@@ -1,0 +1,14 @@
+﻿
+> fathstore-core@1.0.0 build:admin D:\01_WEB\01_Projects\fathstore-core
+> pnpm --filter @fathstore/admin build
+
+
+> @fathstore/admin@1.0.0 build D:\01_WEB\01_Projects\fathstore-core\apps\admin
+> next build
+
+Ôû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 22.7s
+  Running TypeScript ...

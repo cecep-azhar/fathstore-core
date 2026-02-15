@@ -1,0 +1,50 @@
+﻿    at 
+finalizeResolution (n
+ode:internal/modules/
+esm/resolve:274:11)
+    at moduleResolve 
+(node:internal/module
+s/esm/resolve:864:10)
+    at 
+defaultResolve (node:
+internal/modules/esm/
+resolve:990:11)
+    at nextResolve (n
+ode:internal/modules/
+esm/hooks:748:28)
+    at resolve (file:
+///D:/01_WEB/01_Proje
+cts/fathstore-core/no
+de_modules/.pnpm/tsx@
+4.21.0/node_modules/t
+sx/dist/esm/index.mjs
+?1770888357169:2:5279
+)
+    at nextResolve (n
+ode:internal/modules/
+esm/hooks:748:28)
+    at Hooks.resolve 
+(node:internal/module
+s/esm/hooks:240:30)
+    at handleMessage 
+(node:internal/module
+s/esm/worker:201:24)
+    at Immediate.chec
+kForMessages (node:in
+ternal/modules/esm/wo
+rker:143:28)
+    at process.proces
+sImmediate (node:inte
+rnal/timers:504:21) {
+  code: 'ERR_MODULE_N
+OT_FOUND',
+  url: 'file:///D:/01
+_WEB/01_Projects/fath
+store-core/apps/admin
+/collections/Users'
+}
+
+Node.js v25.0.0
+D:\01_WEB\01_Projects\fathstore-core\apps\admin:
+ÔÇëERR_PNPM_RECURSIVE_RUN_FIRST_FAILÔÇë @fathstore/admin@1.0.0 generate:importmap: `payload generate:importmap`
+Exit status 1
