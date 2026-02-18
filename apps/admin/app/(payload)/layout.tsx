@@ -23,6 +23,7 @@ const Layout = ({ children }: Args) => (
         importMap,
       })
     }}
+    htmlProps={{ suppressHydrationWarning: true }}
   >
     {children}
   </RootLayout>

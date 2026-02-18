@@ -2,6 +2,23 @@
 // @fathstore/shared — Shared types & utilities
 // ============================================================
 
+// ── Media Types ─────────────────────────────────────────────
+export interface Media {
+  id: string
+  alt: string
+  filename: string
+  mimeType: string
+  filesize: number
+  width: number
+  height: number
+  url?: string
+  sizes?: {
+    thumbnail?: { url: string; width: number; height: number }
+    card?: { url: string; width: number; height: number }
+    tablet?: { url: string; width: number; height: number }
+  }
+}
+
 // ── Product Types ───────────────────────────────────────────
 export interface ProductVariant {
   id?: string
@@ -17,7 +34,7 @@ export interface Product {
   title: string
   slug: string
   description: unknown // Lexical richText JSON
-  thumbnail?: { url: string; alt?: string }
+  thumbnail?: Media | { url: string; alt?: string } // Support both full object & simplified
   price: number
   compareAtPrice?: number
   category: Category | string
@@ -102,13 +119,14 @@ export interface Category {
   name: string
   slug: string
   description?: string
+  media?: Media | { url: string }
 }
 
 export interface Tenant {
   id: string
   name: string
   slug: string
-  logo?: { url: string }
+  logo?: Media | { url: string }
   domain?: string
   theme?: Record<string, unknown>
 }
@@ -119,6 +137,58 @@ export interface User {
   email: string
   role: 'admin' | 'merchant' | 'member'
   tenantId?: Tenant | string
+}
+
+// ── Layout Blocks ───────────────────────────────────────────
+export interface Button {
+  label: string
+  url: string
+  type: 'primary' | 'secondary'
+}
+
+export interface HeroBlock {
+  blockType: 'hero'
+  headline: string
+  subHeadline?: string
+  backgroundImage: Media | string
+  buttons?: Button[]
+}
+
+export interface ContentBlock {
+  blockType: 'content'
+  richText: any // Lexical JSON
+  layout: 'fullWidth' | 'splitLeft' | 'splitRight'
+  sideImage?: Media | string
+}
+
+export interface StatItem {
+  value: string
+  label: string
+}
+
+export interface StatsBlock {
+  blockType: 'stats'
+  headline?: string
+  statItems: StatItem[]
+}
+
+export interface FeaturedProductsBlock {
+  blockType: 'featuredProducts'
+  headline: string
+  subHeadline?: string
+  products: (Product | string)[]
+}
+
+export type PageBlock = HeroBlock | ContentBlock | StatsBlock | FeaturedProductsBlock
+
+// ── Page Type ───────────────────────────────────────────────
+export interface Page {
+  id: string
+  title: string
+  slug: string
+  layout: PageBlock[]
+  createdAt: string
+  updatedAt: string
 }
 
 // ── Utility Types ───────────────────────────────────────────

@@ -225,6 +225,7 @@ export const Orders: CollectionConfig = {
       label: 'Payment Status',
       options: [
         { label: '⏳ Pending', value: 'pending' },
+        { label: '🔍 Reviewing Payment', value: 'payment_review' },
         { label: '✅ Paid', value: 'paid' },
         { label: '❌ Failed', value: 'failed' },
         { label: '↩️ Refunded', value: 'refunded' },

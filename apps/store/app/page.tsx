@@ -1,18 +1,67 @@
-import { getProducts, getCategories } from '@/lib/payload'
+import { getPage, getProducts, getCategories } from '@/lib/payload'
+import { BlockRenderer } from '@/components/BlockRenderer'
 import { ProductCard } from '@/components/ProductCard'
 import { Banner } from '@/components/Banner'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 export default async function HomePage() {
-  const [productsData, categoriesData] = await Promise.all([
+  const [pageData, productsData, categoriesData] = await Promise.all([
+    getPage('home'),
     getProducts({ featured: true, limit: 8 }),
     getCategories(),
   ])
 
+  // DYNAMIC PAGE MODE
+  if (pageData && pageData.layout && pageData.layout.length > 0) {
+      return (
+          <div className="bg-white min-h-screen">
+            <BlockRenderer blocks={pageData.layout} />
+            
+            {/* We keep the categories section hardcoded for now as it's not a block yet, or move it to a block later */}
+            <section className="max-w-7xl mx-auto px-6 py-20 border-t border-gray-100">
+               <div className="flex items-center justify-between mb-10">
+                <h2 className="text-3xl font-bold text-gray-900">Browse by Category</h2>
+                <Link href="/categories" className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                  View All <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {categoriesData.docs.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/products?category=${cat.slug}`}
+                    className="group relative h-64 overflow-hidden rounded-2xl bg-gray-100"
+                  >
+                      <img
+                        src={`https://images.unsplash.com/photo-${['1515886657613-9f3515b0c78f','1529139574466-a302359418db','1485968579580-c6c09732804c','1556905055-8f358a7a47b2'][Math.floor(Math.random() * 4)]}?auto=format&fit=crop&w=800&q=80`}
+                        alt={cat.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+                    <div className="absolute bottom-0 left-0 p-6">
+                      <h3 className="text-xl font-bold text-white mb-1 group-hover:translate-x-1 transition-transform">
+                        {cat.name}
+                      </h3>
+                       {cat.description && (
+                      <p className="text-sm text-gray-200 line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {cat.description}
+                      </p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+            
+            <Banner />
+          </div>
+      )
+  }
+
+  // STATIC FALLBACK (Original Design)
   return (
     <>
-      {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center">
            <div className="absolute inset-0 z-0">
             <img
@@ -62,7 +111,7 @@ export default async function HomePage() {
                 className="group relative h-64 overflow-hidden rounded-2xl bg-gray-100"
               >
                   <img
-                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80"
+                    src={`https://images.unsplash.com/photo-${['1515886657613-9f3515b0c78f','1529139574466-a302359418db','1485968579580-c6c09732804c','1556905055-8f358a7a47b2'][Math.floor(Math.random() * 4)]}?auto=format&fit=crop&w=800&q=80`}
                     alt={cat.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
@@ -110,7 +159,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Banner Section */}
         <Banner />
     </>
   )

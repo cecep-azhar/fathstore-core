@@ -1,4 +1,4 @@
-import type { PaginatedResponse, Product, Category, Review } from '@fathstore/shared'
+import type { PaginatedResponse, Product, Category, Review, Page } from '@fathstore/shared'
 
 const PAYLOAD_URL = process.env.PAYLOAD_URL || 'http://localhost:3000'
 
@@ -34,10 +34,15 @@ export async function getProducts(params?: {
   featured?: boolean
   page?: number
   limit?: number
+  search?: string
 }): Promise<PaginatedResponse<Product>> {
   const searchParams = new URLSearchParams()
 
   searchParams.set('where[status][equals]', 'active')
+
+  if (params?.search) {
+    searchParams.set('where[title][like]', params.search)
+  }
 
   if (params?.category) {
     searchParams.set('where[category.slug][equals]', params.category)
@@ -81,4 +86,40 @@ export async function getProductReviews(
   return payloadFetch<PaginatedResponse<Review>>(
     `/reviews?where[product][equals]=${productId}&where[approved][equals]=true&sort=-createdAt&page=${page}&limit=10`
   )
+}
+
+/**
+ * Fetch a page by slug
+ */
+export async function getPage(slug: string): Promise<Page | null> {
+  try {
+    const result = await payloadFetch<PaginatedResponse<Page>>(
+      `/pages?where[slug][equals]=${slug}&limit=1`
+    )
+    return result.docs[0] || null
+  } catch (error) {
+    console.error(`Error fetching page ${slug}:`, error)
+    return null
+  }
+}
+
+/**
+ * Create a new order
+ */
+export async function createOrder(data: any, token: string) {
+  const res = await fetch(`${PAYLOAD_URL}/api/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData.errors?.[0]?.message || 'Failed to create order')
+  }
+
+  return res.json()
 }

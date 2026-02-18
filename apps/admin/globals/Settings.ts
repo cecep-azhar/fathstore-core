@@ -196,7 +196,39 @@ export const Settings: GlobalConfig = {
         },
 
         // ══════════════════════════════════════════════════
-        // TAB 4: Social Links
+        // TAB 4: Language
+        // ══════════════════════════════════════════════════
+        {
+          label: 'Language',
+          fields: [
+            {
+              name: 'supportedLanguages',
+              type: 'select',
+              hasMany: true,
+              required: true,
+              defaultValue: ['id', 'en'],
+              label: 'Supported Languages',
+              options: [
+                { label: 'Indonesian (ID)', value: 'id' },
+                { label: 'English (EN)', value: 'en' },
+              ],
+            },
+            {
+              name: 'defaultLanguage',
+              type: 'select',
+              required: true,
+              defaultValue: 'id',
+              label: 'Default Language',
+              options: [
+                { label: 'Indonesian (ID)', value: 'id' },
+                { label: 'English (EN)', value: 'en' },
+              ],
+            },
+          ],
+        },
+
+        // ══════════════════════════════════════════════════
+        // TAB 5: Social Links
         // ══════════════════════════════════════════════════
         {
           label: 'Social Links',

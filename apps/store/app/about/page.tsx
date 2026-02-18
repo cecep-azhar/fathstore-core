@@ -1,13 +1,25 @@
 import React from 'react'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import { getPage } from '@/lib/payload'
+import { BlockRenderer } from '@/components/BlockRenderer'
 
 export const metadata: Metadata = {
   title: 'About Us — Exortive',
   description: 'Learn more about Exortive and our mission to provide premium apparel.',
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const pageData = await getPage('about')
+
+  if (pageData && pageData.layout && pageData.layout.length > 0) {
+      return (
+          <div className="bg-white min-h-screen">
+             <BlockRenderer blocks={pageData.layout} />
+          </div>
+      )
+  }
+
   return (
     <div className="bg-white">
       {/* Hero Section */}

@@ -4,15 +4,18 @@ import React from 'react'
 import Link from 'next/link'
 import { LayoutDashboard, Package, User, PenSquare } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function BottomNav() {
   const pathname = usePathname()
 
+  const { t } = useLanguage()
+
   const navItems = [
-    { href: '/', icon: LayoutDashboard, label: 'Home' },
-    { href: '/orders', icon: Package, label: 'Orders' },
-    { href: '/reviews', icon: PenSquare, label: 'Reviews' },
-    { href: '/profile', icon: User, label: 'Account' },
+    { href: '/', icon: LayoutDashboard, label: t('nav.dashboard') || 'Home' },
+    { href: '/orders', icon: Package, label: t('nav.orders') || 'Orders' },
+    { href: '/reviews', icon: PenSquare, label: t('nav.reviews') || 'Reviews' },
+    { href: '/profile', icon: User, label: t('nav.profile') || 'Account' },
   ]
 
   return (

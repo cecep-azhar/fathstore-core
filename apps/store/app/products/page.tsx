@@ -2,7 +2,7 @@ import { getProducts, getCategories } from '@/lib/payload'
 import { ProductCard } from '@/components/ProductCard'
 
 interface ProductsPageProps {
-  searchParams: Promise<{ category?: string; page?: string }>
+  searchParams: Promise<{ category?: string; page?: string; q?: string }>
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
@@ -12,6 +12,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       category: params.category,
       page: params.page ? parseInt(params.page) : 1,
       limit: 12,
+      search: params.q,
     }),
     getCategories(),
   ])

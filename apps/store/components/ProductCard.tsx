@@ -1,5 +1,7 @@
 import type { Product } from '@fathstore/shared'
 
+import { getMediaUrl } from '@/lib/utils'
+
 interface ProductCardProps {
   product: Product
 }
@@ -13,9 +15,7 @@ function formatRupiah(amount: number): string {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const thumbnailUrl = typeof product.thumbnail === 'object'
-    ? product.thumbnail?.url
-    : null
+  const thumbnailUrl = getMediaUrl(product.thumbnail)
 
   return (
     <a
