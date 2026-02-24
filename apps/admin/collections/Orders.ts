@@ -163,6 +163,33 @@ export const Orders: CollectionConfig = {
 
     // ── Financial Summary ─────────────────────────────────
     {
+      name: 'checkoutCurrency',
+      type: 'select',
+      required: true,
+      defaultValue: 'SGD',
+      label: 'Checkout Currency',
+      options: [
+        { label: 'Indonesian Rupiah (IDR)', value: 'IDR' },
+        { label: 'US Dollar (USD)', value: 'USD' },
+        { label: 'Singapore Dollar (SGD)', value: 'SGD' },
+      ],
+      admin: {
+        description: 'Currency used by the customer at checkout',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'exchangeRateAtCheckout',
+      type: 'number',
+      required: true,
+      defaultValue: 1,
+      label: 'Exchange Rate',
+      admin: {
+        description: 'Rate to base currency at checkout time',
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'subtotal',
       type: 'number',
       required: true,
@@ -243,9 +270,11 @@ export const Orders: CollectionConfig = {
       defaultValue: 'unfulfilled',
       label: 'Fulfillment Status',
       options: [
-        { label: '📦 Unfulfilled', value: 'unfulfilled' },
-        { label: '📦 Partially Fulfilled', value: 'partially_fulfilled' },
-        { label: '✅ Fulfilled', value: 'fulfilled' },
+        { label: '📦 Unfulfilled (Pending)', value: 'unfulfilled' },
+        { label: '📦 Processing', value: 'processing' },
+        { label: '🚚 Shipped (Dikirim)', value: 'shipped' },
+        { label: '✅ Completed (Selesai)', value: 'completed' },
+        { label: '⚠️ Complaint (Komplain)', value: 'complaint' },
       ],
       admin: {
         position: 'sidebar',
@@ -293,12 +322,14 @@ export const Orders: CollectionConfig = {
       label: 'Shipping Address',
       fields: [
         { name: 'fullName', type: 'text', required: false, label: 'Full Name' },
-        { name: 'street', type: 'textarea', required: false, label: 'Street Address' },
-        { name: 'city', type: 'text', required: false, label: 'City' },
-        { name: 'province', type: 'text', required: false, label: 'Province / State' },
-        { name: 'postalCode', type: 'text', required: false, label: 'Postal Code' },
-        { name: 'country', type: 'text', required: false, label: 'Country', defaultValue: 'Indonesia' },
         { name: 'phone', type: 'text', required: false, label: 'Phone' },
+        { name: 'province', type: 'text', required: false, label: 'Province' },
+        { name: 'city', type: 'text', required: false, label: 'City' },
+        { name: 'district', type: 'text', required: false, label: 'District / Kecamatan' },
+        { name: 'subdistrict', type: 'text', required: false, label: 'Subdistrict / Kelurahan' },
+        { name: 'postalCode', type: 'text', required: false, label: 'Postal Code' },
+        { name: 'street', type: 'textarea', required: false, label: 'Street Address' },
+        { name: 'country', type: 'text', required: false, label: 'Country', defaultValue: 'Indonesia' },
       ],
     },
 
@@ -312,12 +343,14 @@ export const Orders: CollectionConfig = {
       },
       fields: [
         { name: 'fullName', type: 'text', required: false, label: 'Full Name' },
-        { name: 'street', type: 'textarea', required: false, label: 'Street Address' },
-        { name: 'city', type: 'text', required: false, label: 'City' },
-        { name: 'province', type: 'text', required: false, label: 'Province / State' },
-        { name: 'postalCode', type: 'text', required: false, label: 'Postal Code' },
-        { name: 'country', type: 'text', required: false, label: 'Country', defaultValue: 'Indonesia' },
         { name: 'phone', type: 'text', required: false, label: 'Phone' },
+        { name: 'province', type: 'text', required: false, label: 'Province' },
+        { name: 'city', type: 'text', required: false, label: 'City' },
+        { name: 'district', type: 'text', required: false, label: 'District / Kecamatan' },
+        { name: 'subdistrict', type: 'text', required: false, label: 'Subdistrict / Kelurahan' },
+        { name: 'postalCode', type: 'text', required: false, label: 'Postal Code' },
+        { name: 'street', type: 'textarea', required: false, label: 'Street Address' },
+        { name: 'country', type: 'text', required: false, label: 'Country', defaultValue: 'Indonesia' },
       ],
     },
 

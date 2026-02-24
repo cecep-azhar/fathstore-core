@@ -13,6 +13,10 @@ import { NextRequest, NextResponse } from 'next/server'
  * 3. If no valid license → redirect to /license-expired
  * 4. If valid → proceed normally
  */
+import createMiddleware from 'next-intl/middleware'
+import { routing } from './i18n/routing'
+
+const intlMiddleware = createMiddleware(routing)
 
 const PAYLOAD_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
@@ -52,7 +56,7 @@ export async function middleware(request: NextRequest) {
 
   // If no tenant detected, allow (single-tenant mode or direct access)
   if (!tenantSlug) {
-    return NextResponse.next()
+    return intlMiddleware(request)
   }
 
   try {
@@ -70,7 +74,7 @@ export async function middleware(request: NextRequest) {
     if (!response.ok) {
       console.error(`[LicenseGuard] Payload API error: ${response.status}`)
       // On API error, allow through (fail-open) to avoid blocking all traffic
-      return NextResponse.next()
+      return intlMiddleware(request)
     }
 
     const data = await response.json()
@@ -88,18 +92,20 @@ export async function middleware(request: NextRequest) {
     }
 
     // License is valid — inject tenant info into headers for downstream use
-    const requestHeaders = new Headers(request.headers)
-    requestHeaders.set('x-tenant-id', license.tenant?.id || license.tenant || '')
-    requestHeaders.set('x-tenant-slug', tenantSlug)
-    requestHeaders.set('x-license-plan', license.plan)
+    request.headers.set('x-tenant-id', license.tenant?.id || license.tenant || '')
+    request.headers.set('x-tenant-slug', tenantSlug)
+    request.headers.set('x-license-plan', license.plan)
 
-    return NextResponse.next({
-      request: { headers: requestHeaders },
-    })
+    const responseWithIntl = intlMiddleware(request)
+    responseWithIntl.headers.set('x-tenant-id', license.tenant?.id || license.tenant || '')
+    responseWithIntl.headers.set('x-tenant-slug', tenantSlug)
+    responseWithIntl.headers.set('x-license-plan', license.plan)
+
+    return responseWithIntl
   } catch (error) {
     console.error('[LicenseGuard] Error checking license:', error)
     // Fail-open: don't block traffic on infrastructure errors
-    return NextResponse.next()
+    return intlMiddleware(request)
   }
 }
 
@@ -110,7 +116,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - api routes
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api).*)',
   ],
 }
