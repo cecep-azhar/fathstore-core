@@ -10,9 +10,6 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
   turbopack: {
     resolveAlias: {
       'next-intl/config': './i18n/request.ts',
