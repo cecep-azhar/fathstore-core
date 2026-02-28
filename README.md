@@ -1,4 +1,4 @@
-# LMS WIJAD.com - Islamic Learning Management System
+# Fathstore
 
 A complete, production-ready Next.js 16 application with PayloadCMS for Islamic education and learning management.
 
