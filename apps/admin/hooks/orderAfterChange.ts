@@ -4,10 +4,9 @@ import type { CollectionAfterChangeHook } from 'payload'
  * Order afterChange Hook — Xendit 1% Split-Payment
  *
  * When an order transitions to "paid" status:
- * 1. Look up the tenant's license → get feePercentage (default 1%)
- * 2. Calculate platform fee = order.total × feePercentage / 100
- * 3. Call Xendit Create Disbursement API
- * 4. Log the result back to the order's paymentData
+ * 1. Calculate platform fee = order.total × feePercentage / 100
+ * 2. Call Xendit Create Disbursement API
+ * 3. Log the result back to the order's paymentData
  */
 export const orderAfterChange: CollectionAfterChangeHook = async ({
   doc,
@@ -20,27 +19,8 @@ export const orderAfterChange: CollectionAfterChangeHook = async ({
     const payload = req.payload
 
     try {
-      // ── 1. Get tenant's license ─────────────────────────
-      const tenantId = typeof doc.tenantId === 'object' ? doc.tenantId?.id : doc.tenantId
-
-      let feePercentage = 1 // default 1%
-
-      if (tenantId) {
-        const licenses = await payload.find({
-          collection: 'licenses',
-          where: {
-            and: [
-              { tenant: { equals: tenantId } },
-              { status: { equals: 'active' } },
-            ],
-          },
-          limit: 1,
-        })
-
-        if (licenses.docs.length > 0) {
-          feePercentage = (licenses.docs[0] as any).feePercentage ?? 1
-        }
-      }
+      // ── 1. Calculate platform fee ─────────────────────────
+      let feePercentage = 1 // default fixed 1% for single store
 
       // ── 2. Calculate platform fee ───────────────────────
       const orderTotal = doc.total as number

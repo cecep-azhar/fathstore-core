@@ -1,3 +1,5 @@
+"use client"
+
 import type { Product } from '@fathstore/shared'
 
 import { getMediaUrl } from '@/lib/utils'

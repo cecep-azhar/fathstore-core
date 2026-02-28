@@ -12,10 +12,8 @@ import { Users } from './collections/Users.ts'
 import { Products } from './collections/Products.ts'
 import { Orders } from './collections/Orders.ts'
 import { Reviews } from './collections/Reviews.ts'
-import { Licenses } from './collections/Licenses.ts'
 import { Categories } from './collections/Categories.ts'
 import { Banks } from './collections/Banks.ts'
-import { Tenants } from './collections/Tenants.ts'
 import { Media } from './collections/Media.ts'
 import { Discounts } from './collections/Discounts.ts'
 import { Provinces } from './collections/Locations/Provinces.ts'
@@ -49,10 +47,8 @@ export default buildConfig({
     Products,
     Orders,
     Reviews,
-    Licenses,
     Categories,
     Banks,
-    Tenants,
     Media,
     Discounts,
     Pages,

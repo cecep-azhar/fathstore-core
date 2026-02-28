@@ -1,3 +1,7 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -9,6 +13,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  turbopack: {
+    resolveAlias: {
+      'next-intl/config': './i18n/request.ts',
+    },
+  },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig);

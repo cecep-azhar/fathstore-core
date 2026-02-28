@@ -27,14 +27,6 @@ test.describe('E2E Flow: Purchase -> Admin Accept -> Member Rating', () => {
 
     // --- STEP 2: PURCHASE PRODUCT IN STORE ---
     await test.step('Purchase Product', async () => {
-      // Login to store first if session is not shared automatically 
-      // (assuming shared cookie domain or standard auth)
-      await page.goto(`${STORE_URL}/login`);
-      await page.fill('input[type="email"], input[name="email"]', testEmail);
-      await page.fill('input[type="password"], input[name="password"]', testPassword);
-      await page.click('button[type="submit"]');
-      await page.waitForTimeout(2000);
-
       // Go to products page and add to cart
       await page.goto(`${STORE_URL}/products`);
       // Click the first product link
@@ -45,6 +37,7 @@ test.describe('E2E Flow: Purchase -> Admin Accept -> Member Rating', () => {
       
       // Go to checkout
       await page.goto(`${STORE_URL}/checkout`);
+
       
       // Add new address
       await page.click('button:has-text("Add New Address"), button:has-text("Tambah Alamat")');

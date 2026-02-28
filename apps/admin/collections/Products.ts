@@ -466,17 +466,7 @@ export const Products: CollectionConfig = {
       ],
     },
 
-    // ── Multi-Tenant ─────────────────────────────────────
-    {
-      name: 'tenantId',
-      type: 'relationship',
-      relationTo: 'tenants',
-      required: false,
-      label: 'Tenant',
-      admin: {
-        position: 'sidebar',
-      },
-    },
+
 
     // ── Timestamps ───────────────────────────────────────
     {
