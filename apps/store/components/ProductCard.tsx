@@ -1,20 +1,14 @@
 import type { Product } from '@fathstore/shared'
 
 import { getMediaUrl } from '@/lib/utils'
+import { useCurrency } from '@/providers/CurrencyProvider'
 
 interface ProductCardProps {
   product: Product
 }
 
-function formatRupiah(amount: number): string {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount)
-}
-
 export function ProductCard({ product }: ProductCardProps) {
+  const { formatPrice } = useCurrency()
   const thumbnailUrl = getMediaUrl(product.thumbnail)
 
   return (
@@ -49,11 +43,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-2 flex items-center gap-2">
           <span className="text-lg font-bold text-emerald-700">
-            {formatRupiah(product.price)}
+            {formatPrice(product.price)}
           </span>
           {product.compareAtPrice && product.compareAtPrice > product.price && (
             <span className="text-sm text-gray-400 line-through">
-              {formatRupiah(product.compareAtPrice)}
+              {formatPrice(product.compareAtPrice)}
             </span>
           )}
         </div>

@@ -122,6 +122,29 @@ export default function OrderDetailPage() {
     }
   }
 
+  const handleUpdateFulfillment = async (status: 'completed' | 'complaint') => {
+    if (!confirm(`Are you sure you want to mark this order as ${status}?`)) return
+    
+    setLoading(true)
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ fulfillmentStatus: status }),
+      })
+      if (!res.ok) throw new Error('Failed to update status')
+      const updatedOrder = await res.json()
+      setOrder(updatedOrder.doc)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   if (loading || authLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
@@ -146,6 +169,8 @@ export default function OrderDetailPage() {
   const isPending = order.paymentStatus === 'pending'
   const isReviewing = order.paymentStatus === 'payment_review'
   const isPaid = order.paymentStatus === 'paid'
+  const isShipped = order.fulfillmentStatus === 'shipped'
+  const isCompleted = order.fulfillmentStatus === 'completed'
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -157,14 +182,19 @@ export default function OrderDetailPage() {
           <h1 className="text-2xl font-bold text-gray-900">
              Order #{order.orderNumber}
           </h1>
-          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-            ${order.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' : 
-              order.paymentStatus === 'failed' ? 'bg-red-100 text-red-800' : 
-              order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' : 
-              'bg-yellow-100 text-yellow-800'}`} // pending, payment_review
-          >
-            {order.paymentStatus.replace('_', ' ').toUpperCase()}
-          </span>
+          <div className="flex gap-2">
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap
+              ${order.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' : 
+                order.paymentStatus === 'failed' ? 'bg-red-100 text-red-800' : 
+                order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' : 
+                'bg-yellow-100 text-yellow-800'}`}
+            >
+              Payment: {order.paymentStatus.replace('_', ' ').toUpperCase()}
+            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+              Status: {order.fulfillmentStatus?.toUpperCase() || 'UNFULFILLED'}
+            </span>
+          </div>
         </div>
         <p className="text-sm text-gray-500 mt-1">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
       </div>
@@ -219,8 +249,40 @@ export default function OrderDetailPage() {
                    <p className="text-sm text-gray-500 mt-1">Tracking Number:</p>
                    <p className="text-xl font-mono font-bold text-gray-900 mt-1 select-all">{order.trackingNumber}</p>
                    <p className="text-xs text-gray-400 mt-2">You can track this number on the carrier's website.</p>
-                </div>
-             </div>
+                 </div>
+              </div>
+           )}
+
+           {/* Order Actions based on Fulfillment */}
+           {(isShipped || isCompleted) && (
+              <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-6">
+                 <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                   <h3 className="text-lg leading-6 font-medium text-gray-900">Order Actions</h3>
+                 </div>
+                 <div className="px-4 py-5 sm:px-6 space-y-4">
+                    {isShipped && (
+                       <div className="flex flex-col gap-3">
+                          <p className="text-sm text-gray-600">Have you received your order in good condition?</p>
+                          <div className="flex gap-4">
+                            <button onClick={() => handleUpdateFulfillment('completed')} className="flex-1 bg-emerald-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-emerald-700">
+                              Pesanan Diterima (Selesai)
+                            </button>
+                            <button onClick={() => handleUpdateFulfillment('complaint')} className="flex-1 bg-white border border-red-300 rounded-md shadow-sm py-2 px-4 text-sm font-medium text-red-700 hover:bg-red-50">
+                              Komplain
+                            </button>
+                          </div>
+                       </div>
+                    )}
+                    {isCompleted && (
+                       <div className="flex flex-col gap-3">
+                          <p className="text-sm text-gray-600">Your order is complete. How was your experience?</p>
+                          <Link href={`/reviews/new?orderId=${order.id}`} className="inline-flex justify-center items-center w-full bg-amber-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-amber-600">
+                            Write a Review
+                          </Link>
+                       </div>
+                    )}
+                 </div>
+              </div>
            )}
         </div>
 

@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext'
 import { useLanguage } from '@/context/LanguageContext'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { CurrencySwitcher } from '@/components/CurrencySwitcher'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -63,6 +64,7 @@ export function Header() {
               >
                 <Search className="w-5 h-5" />
               </button>
+              <CurrencySwitcher />
               <LanguageSwitcher />
               <ThemeToggle />
               <Link href="/cart" className="p-2 text-gray-600 hover:text-black transition-colors relative dark:text-gray-400 dark:hover:text-white">

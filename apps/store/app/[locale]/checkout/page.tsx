@@ -6,13 +6,18 @@ import Link from 'next/link'
 import { useAuth } from '@/providers/AuthProvider'
 import { useCart } from '@/context/CartContext'
 import { useLanguage } from '@/context/LanguageContext'
+import { useCurrency } from '@/providers/CurrencyProvider'
 import { createOrder } from '@/lib/payload'
-import { ChevronRight, CreditCard, MapPin, Truck, CheckCircle, AlertCircle } from 'lucide-react'
+import { ChevronRight, CreditCard, MapPin, Truck, CheckCircle, AlertCircle, Plus } from 'lucide-react'
+
+// Hardcoded rates for frontend submission (ideally fetched from /api/globals/settings)
+const RATES: Record<string, number> = { SGD: 1, IDR: 11500, USD: 0.75 }
 
 export default function CheckoutPage() {
-  const { user, token, isLoading: authLoading } = useAuth()
+  const { user, token, isLoading: authLoading } = useAuth() as { user: any, token: string | null, isLoading: boolean }
   const { items, cartCount, clearCart } = useCart()
   const { t } = useLanguage()
+  const { activeCurrency, formatPrice } = useCurrency()
   const router = useRouter()
 
   const [step, setStep] = useState<'address' | 'shipping' | 'payment'>('address')
@@ -21,6 +26,73 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // New Address Form State
+  const [isAddingAddress, setIsAddingAddress] = useState(false)
+  const [newAddress, setNewAddress] = useState({
+    fullName: '', phone: '', street: '', province: '', city: '', district: '', subdistrict: '', postalCode: '', country: 'Singapore'
+  })
+
+  // Cascading Location State
+  const [provinces, setProvinces] = useState<any[]>([])
+  const [cities, setCities] = useState<any[]>([])
+  const [districts, setDistricts] = useState<any[]>([])
+  const [subdistricts, setSubdistricts] = useState<any[]>([])
+
+  const [selectedProvinceId, setSelectedProvinceId] = useState('')
+  const [selectedCityId, setSelectedCityId] = useState('')
+  const [selectedDistrictId, setSelectedDistrictId] = useState('')
+
+  // Fetch initial provinces
+  useEffect(() => {
+    if (isAddingAddress) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/provinces?limit=100`)
+        .then(res => res.json())
+        .then(data => setProvinces(data.docs || []))
+        .catch(console.error)
+    }
+  }, [isAddingAddress])
+
+  // Fetch cities when province changes
+  useEffect(() => {
+    if (selectedProvinceId) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/cities?where[province][equals]=${selectedProvinceId}&limit=100`)
+        .then(res => res.json())
+        .then(data => setCities(data.docs || []))
+        .catch(console.error)
+    } else {
+      setCities([])
+    }
+    setSelectedCityId('')
+    setNewAddress(p => ({ ...p, city: '', district: '', subdistrict: '' }))
+  }, [selectedProvinceId])
+
+  // Fetch districts when city changes
+  useEffect(() => {
+    if (selectedCityId) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/districts?where[city][equals]=${selectedCityId}&limit=100`)
+        .then(res => res.json())
+        .then(data => setDistricts(data.docs || []))
+        .catch(console.error)
+    } else {
+      setDistricts([])
+    }
+    setSelectedDistrictId('')
+    setNewAddress(p => ({ ...p, district: '', subdistrict: '' }))
+  }, [selectedCityId])
+
+  // Fetch subdistricts when district changes
+  useEffect(() => {
+    if (selectedDistrictId) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/subdistricts?where[district][equals]=${selectedDistrictId}&limit=100`)
+        .then(res => res.json())
+        .then(data => setSubdistricts(data.docs || []))
+        .catch(console.error)
+    } else {
+      setSubdistricts([])
+    }
+    setNewAddress(p => ({ ...p, subdistrict: '' }))
+  }, [selectedDistrictId])
 
   // Redirect if not logged in or empty cart
   useEffect(() => {
@@ -40,7 +112,9 @@ export default function CheckoutPage() {
   }, [user, selectedAddressIndex])
 
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-  const shippingCost = shippingMethod ? 15000 : 0 // Flat rate example
+  
+  // Base shipping cost in SGD (Singapore Dollar) by default
+  const shippingCost = shippingMethod ? 15 : 0 
   const total = subtotal + shippingCost
 
   const handleCreateOrder = async () => {
@@ -53,7 +127,7 @@ export default function CheckoutPage() {
     setError(null)
 
     try {
-      const address = user.addresses[selectedAddressIndex]
+      const address = selectedAddressIndex === -1 ? newAddress : user.addresses[selectedAddressIndex]
       
       const orderData = {
         customer: user.id,
@@ -69,16 +143,20 @@ export default function CheckoutPage() {
         total,
         shippingCost,
         shippingAddress: {
-          fullName: address.fullName,
-          street: address.street,
-          city: address.city,
-          province: address.province,
-          postalCode: address.postalCode,
-          phone: address.phone,
-          country: address.country || 'Indonesia'
+          fullName: address.fullName || newAddress.fullName,
+          street: address.street || newAddress.street,
+          city: address.city || newAddress.city,
+          district: address.district || newAddress.district,
+          subdistrict: address.subdistrict || newAddress.subdistrict,
+          province: address.province || newAddress.province,
+          postalCode: address.postalCode || newAddress.postalCode,
+          phone: address.phone || newAddress.phone,
+          country: address.country || newAddress.country || 'Singapore'
         },
         shippingCarrier: shippingMethod,
         paymentMethod,
+        checkoutCurrency: activeCurrency,
+        exchangeRateAtCheckout: RATES[activeCurrency] || 1,
         paymentStatus: 'pending', // Initial status
         fulfillmentStatus: 'unfulfilled'
       }
@@ -120,7 +198,74 @@ export default function CheckoutPage() {
               
               {step === 'address' && (
                 <div className="space-y-4">
-                  {user.addresses?.length > 0 ? (
+                  {isAddingAddress ? (
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                      <h3 className="font-semibold text-gray-900">Add New Address</h3>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                         <input type="text" placeholder="Full Name" value={newAddress.fullName} onChange={e => setNewAddress({...newAddress, fullName: e.target.value})} className="border-gray-300 rounded-md focus:ring-emerald-500" />
+                         <input type="text" placeholder="Phone" value={newAddress.phone} onChange={e => setNewAddress({...newAddress, phone: e.target.value})} className="border-gray-300 rounded-md focus:ring-emerald-500" />
+                         <select className="border-gray-300 rounded-md focus:ring-emerald-500" value={newAddress.country} onChange={e => setNewAddress({...newAddress, country: e.target.value})}>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Indonesia">Indonesia</option>
+                         </select>
+                         
+                         <select 
+                            className="border-gray-300 rounded-md focus:ring-emerald-500" 
+                            value={selectedProvinceId} 
+                            onChange={e => {
+                               setSelectedProvinceId(e.target.value);
+                               setNewAddress({...newAddress, province: e.target.options[e.target.selectedIndex].text});
+                            }}
+                         >
+                            <option value="">Select Province</option>
+                            {provinces.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                         </select>
+                         
+                         <select 
+                            className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
+                            value={selectedCityId} 
+                            disabled={!selectedProvinceId}
+                            onChange={e => {
+                               setSelectedCityId(e.target.value);
+                               setNewAddress({...newAddress, city: e.target.options[e.target.selectedIndex].text});
+                            }}
+                         >
+                            <option value="">Select City</option>
+                            {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                         </select>
+
+                         <select 
+                            className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
+                            value={selectedDistrictId} 
+                            disabled={!selectedCityId}
+                            onChange={e => {
+                               setSelectedDistrictId(e.target.value);
+                               setNewAddress({...newAddress, district: e.target.options[e.target.selectedIndex].text});
+                            }}
+                         >
+                            <option value="">Select District</option>
+                            {districts.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                         </select>
+
+                         <select 
+                            className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
+                            value={newAddress.subdistrict} 
+                            disabled={!selectedDistrictId}
+                            onChange={e => setNewAddress({...newAddress, subdistrict: e.target.value})}
+                         >
+                            <option value="">Select Subdistrict</option>
+                            {subdistricts.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                         </select>
+
+                         <input type="text" placeholder="Postal Code" value={newAddress.postalCode} onChange={e => setNewAddress({...newAddress, postalCode: e.target.value})} className="border-gray-300 rounded-md focus:ring-emerald-500" />
+                      </div>
+                      <textarea placeholder="Street Address (Optional Detail)" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} className="w-full border-gray-300 rounded-md focus:ring-emerald-500" rows={2}></textarea>
+                      <div className="flex justify-end gap-2 mt-2">
+                        <button onClick={() => setIsAddingAddress(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancel</button>
+                        <button onClick={() => setSelectedAddressIndex(-1)} className={`px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md shadow-sm hover:bg-emerald-700 ${selectedAddressIndex === -1 ? 'ring-2 ring-emerald-500 ring-offset-1' : ''}`}>Use This Address</button>
+                      </div>
+                    </div>
+                  ) : user.addresses?.length > 0 ? (
                     <div className="grid gap-4 sm:grid-cols-2">
                       {user.addresses.map((addr: any, idx: number) => (
                         <div 
@@ -142,13 +287,19 @@ export default function CheckoutPage() {
                   ) : (
                     <div className="text-center py-6 bg-gray-50 rounded-lg">
                       <p className="text-gray-600 mb-4">You don't have any saved addresses.</p>
-                      <a href={`${process.env.NEXT_PUBLIC_MEMBER_URL}/profile`} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700">
-                        Add Address in Profile
-                      </a>
+                      <button onClick={() => setIsAddingAddress(true)} className="inline-flex items-center gap-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700">
+                        <Plus className="w-4 h-4" /> Add New Address
+                      </button>
                     </div>
                   )}
 
-                  {user.addresses?.length > 0 && (
+                  {!isAddingAddress && user.addresses?.length > 0 && (
+                    <button onClick={() => setIsAddingAddress(true)} className="text-sm text-emerald-600 font-medium hover:underline flex items-center gap-1">
+                      <Plus className="w-4 h-4" /> Add Another Address
+                    </button>
+                  )}
+
+                  {(user.addresses?.length > 0 || selectedAddressIndex === -1) && (
                     <button 
                       onClick={() => setStep('shipping')}
                       disabled={selectedAddressIndex === null}
@@ -161,8 +312,8 @@ export default function CheckoutPage() {
               )}
                {step !== 'address' && selectedAddressIndex !== null && (
                  <div className="text-sm text-gray-600">
-                    <p className="font-medium">{user.addresses[selectedAddressIndex].fullName}</p>
-                    <p>{user.addresses[selectedAddressIndex].street}, {user.addresses[selectedAddressIndex].city}</p>
+                    <p className="font-medium">{selectedAddressIndex === -1 ? newAddress.fullName : user.addresses[selectedAddressIndex].fullName}</p>
+                    <p>{selectedAddressIndex === -1 ? newAddress.street : user.addresses[selectedAddressIndex].street}</p>
                  </div>
                )}
             </div>
@@ -182,19 +333,12 @@ export default function CheckoutPage() {
               {step === 'shipping' && (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                     <label className={`block border p-4 rounded-lg cursor-pointer flex justify-between items-center ${shippingMethod === 'JNE' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
+                     <label className={`border p-4 rounded-lg cursor-pointer flex justify-between items-center ${shippingMethod === 'Flat Rate Int' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
                         <div className="flex items-center gap-3">
-                           <input type="radio" name="shipping" value="JNE" checked={shippingMethod === 'JNE'} onChange={(e) => setShippingMethod(e.target.value)} className="text-emerald-600 focus:ring-emerald-500" />
-                           <span className="font-medium">JNE Regular</span>
+                           <input type="radio" name="shipping" value="Flat Rate Int" checked={shippingMethod === 'Flat Rate Int'} onChange={(e) => setShippingMethod(e.target.value)} className="text-emerald-600 focus:ring-emerald-500" />
+                           <span className="font-medium">Flat Rate (Singapore/Intl)</span>
                         </div>
-                        <span className="font-bold">Rp 15.000</span>
-                     </label>
-                     <label className={`block border p-4 rounded-lg cursor-pointer flex justify-between items-center ${shippingMethod === 'JNT' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
-                        <div className="flex items-center gap-3">
-                           <input type="radio" name="shipping" value="JNT" checked={shippingMethod === 'JNT'} onChange={(e) => setShippingMethod(e.target.value)} className="text-emerald-600 focus:ring-emerald-500" />
-                           <span className="font-medium">J&T Express</span>
-                        </div>
-                        <span className="font-bold">Rp 15.000</span>
+                        <span className="font-bold">{formatPrice(15)}</span>
                      </label>
                   </div>
                   <button 
@@ -207,7 +351,7 @@ export default function CheckoutPage() {
                 </div>
               )}
               {step === 'payment' && shippingMethod && (
-                 <p className="text-sm text-gray-600">{shippingMethod} Regular - Rp 15.000</p>
+                 <p className="text-sm text-gray-600">{shippingMethod} - {formatPrice(15)}</p>
               )}
             </div>
 
@@ -221,17 +365,17 @@ export default function CheckoutPage() {
               {step === 'payment' && (
                  <div className="space-y-4">
                     <div className="space-y-2">
-                       <label className={`block border p-4 rounded-lg cursor-pointer flex items-center gap-3 ${paymentMethod === 'bank_transfer' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
+                       <label className={`border p-4 rounded-lg cursor-pointer flex items-center gap-3 ${paymentMethod === 'bank_transfer' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
                            <input type="radio" name="payment" value="bank_transfer" checked={paymentMethod === 'bank_transfer'} onChange={(e) => setPaymentMethod(e.target.value)} className="text-emerald-600 focus:ring-emerald-500" />
                            <div>
-                              <span className="block font-medium">Bank Transfer (Manual)</span>
+                              <span className="font-medium">Bank Transfer (Manual)</span>
                               <span className="text-sm text-gray-500">Upload proof of payment after checkout</span>
                            </div>
                        </label>
-                       <label className={`block border p-4 rounded-lg cursor-pointer flex items-center gap-3 ${paymentMethod === 'qris' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
+                       <label className={`border p-4 rounded-lg cursor-pointer flex items-center gap-3 ${paymentMethod === 'qris' ? 'border-emerald-600 bg-emerald-50' : 'border-gray-200'}`}>
                            <input type="radio" name="payment" value="qris" checked={paymentMethod === 'qris'} onChange={(e) => setPaymentMethod(e.target.value)} className="text-emerald-600 focus:ring-emerald-500" />
                            <div>
-                              <span className="block font-medium">QRIS</span>
+                              <span className="font-medium">QRIS</span>
                               <span className="text-sm text-gray-500">Scan QR code to pay instantly</span>
                            </div>
                        </label>
@@ -251,9 +395,9 @@ export default function CheckoutPage() {
                       {items.map((item) => (
                          <li key={item.cartId} className="flex py-4">
                             <div className="flex-1 flex flex-col">
-                               <div className="flex justify-between text-base font-medium text-gray-900">
+                                <div className="flex justify-between text-base font-medium text-gray-900">
                                   <h3>{item.title}</h3>
-                                  <p className="ml-4">Rp {(item.price * item.quantity).toLocaleString('id-ID')}</p>
+                                  <p className="ml-4">{formatPrice(item.price * item.quantity)}</p>
                                </div>
                                <p className="mt-1 text-sm text-gray-500">Qty {item.quantity}</p>
                             </div>
@@ -265,15 +409,15 @@ export default function CheckoutPage() {
                 <dl className="border-t border-gray-200 pt-4 mt-6 space-y-2">
                    <div className="flex items-center justify-between text-sm text-gray-600">
                       <dt>Subtotal</dt>
-                      <dd>Rp {subtotal.toLocaleString('id-ID')}</dd>
+                      <dd>{formatPrice(subtotal)}</dd>
                    </div>
                    <div className="flex items-center justify-between text-sm text-gray-600">
                       <dt>Shipping</dt>
-                      <dd>Rp {shippingCost.toLocaleString('id-ID')}</dd>
+                      <dd>{formatPrice(shippingCost)}</dd>
                    </div>
                    <div className="border-t border-gray-200 pt-4 flex items-center justify-between text-base font-bold text-gray-900">
                       <dt>Total</dt>
-                      <dd>Rp {total.toLocaleString('id-ID')}</dd>
+                      <dd>{formatPrice(total)}</dd>
                    </div>
                 </dl>
 
