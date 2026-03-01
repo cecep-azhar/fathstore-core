@@ -16,6 +16,8 @@ import { Categories } from './collections/Categories.ts'
 import { Banks } from './collections/Banks.ts'
 import { Media } from './collections/Media.ts'
 import { Discounts } from './collections/Discounts.ts'
+import { Licenses } from './collections/Licenses.ts'
+import { Tenants } from './collections/Tenants.ts'
 import { Provinces } from './collections/Locations/Provinces.ts'
 import { Cities } from './collections/Locations/Cities.ts'
 import { Districts } from './collections/Locations/Districts.ts'
@@ -51,6 +53,8 @@ export default buildConfig({
     Banks,
     Media,
     Discounts,
+    Licenses,
+    Tenants,
     Pages,
     Provinces,
     Cities,
@@ -71,6 +75,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
+    push: process.env.NODE_ENV !== 'production',
   }),
 
   sharp,

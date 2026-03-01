@@ -43,10 +43,10 @@ export default function CheckoutPage() {
   const [selectedCityId, setSelectedCityId] = useState('')
   const [selectedDistrictId, setSelectedDistrictId] = useState('')
 
-  // Fetch initial provinces
+  // Fetch initial provinces — uses store's own proxy route to avoid CORS issues
   useEffect(() => {
-    if (isAddingAddress) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/provinces?limit=100`)
+    if (isAddingAddress && provinces.length === 0) {
+      fetch('/api/locations/provinces?limit=200')
         .then(res => res.json())
         .then(data => setProvinces(data.docs || []))
         .catch(console.error)
@@ -56,7 +56,7 @@ export default function CheckoutPage() {
   // Fetch cities when province changes
   useEffect(() => {
     if (selectedProvinceId) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/cities?where[province][equals]=${selectedProvinceId}&limit=100`)
+      fetch(`/api/locations/cities?where[province][equals]=${selectedProvinceId}&limit=200`)
         .then(res => res.json())
         .then(data => setCities(data.docs || []))
         .catch(console.error)
@@ -64,13 +64,14 @@ export default function CheckoutPage() {
       setCities([])
     }
     setSelectedCityId('')
-    setNewAddress(p => ({ ...p, city: '', district: '', subdistrict: '' }))
+    setSelectedDistrictId('')
+    setNewAddress(p => ({ ...p, city: '', district: '', subdistrict: '', postalCode: '' }))
   }, [selectedProvinceId])
 
   // Fetch districts when city changes
   useEffect(() => {
     if (selectedCityId) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/districts?where[city][equals]=${selectedCityId}&limit=100`)
+      fetch(`/api/locations/districts?where[city][equals]=${selectedCityId}&limit=200`)
         .then(res => res.json())
         .then(data => setDistricts(data.docs || []))
         .catch(console.error)
@@ -78,20 +79,20 @@ export default function CheckoutPage() {
       setDistricts([])
     }
     setSelectedDistrictId('')
-    setNewAddress(p => ({ ...p, district: '', subdistrict: '' }))
+    setNewAddress(p => ({ ...p, district: '', subdistrict: '', postalCode: '' }))
   }, [selectedCityId])
 
   // Fetch subdistricts when district changes
   useEffect(() => {
     if (selectedDistrictId) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/subdistricts?where[district][equals]=${selectedDistrictId}&limit=100`)
+      fetch(`/api/locations/subdistricts?where[district][equals]=${selectedDistrictId}&limit=200`)
         .then(res => res.json())
         .then(data => setSubdistricts(data.docs || []))
         .catch(console.error)
     } else {
       setSubdistricts([])
     }
-    setNewAddress(p => ({ ...p, subdistrict: '' }))
+    setNewAddress(p => ({ ...p, subdistrict: '', postalCode: '' }))
   }, [selectedDistrictId])
 
   // Redirect if not logged in or empty cart
@@ -204,12 +205,13 @@ export default function CheckoutPage() {
                       <div className="grid gap-4 sm:grid-cols-2">
                          <input type="text" placeholder="Full Name" value={newAddress.fullName} onChange={e => setNewAddress({...newAddress, fullName: e.target.value})} className="border-gray-300 rounded-md focus:ring-emerald-500" />
                          <input type="text" placeholder="Phone" value={newAddress.phone} onChange={e => setNewAddress({...newAddress, phone: e.target.value})} className="border-gray-300 rounded-md focus:ring-emerald-500" />
-                         <select className="border-gray-300 rounded-md focus:ring-emerald-500" value={newAddress.country} onChange={e => setNewAddress({...newAddress, country: e.target.value})}>
+                         <select aria-label="Country" className="border-gray-300 rounded-md focus:ring-emerald-500" value={newAddress.country} onChange={e => setNewAddress({...newAddress, country: e.target.value})}>
                             <option value="Singapore">Singapore</option>
                             <option value="Indonesia">Indonesia</option>
                          </select>
                          
                          <select 
+                            aria-label="Select Province"
                             className="border-gray-300 rounded-md focus:ring-emerald-500" 
                             value={selectedProvinceId} 
                             onChange={e => {
@@ -222,6 +224,7 @@ export default function CheckoutPage() {
                          </select>
                          
                          <select 
+                            aria-label="Select City"
                             className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
                             value={selectedCityId} 
                             disabled={!selectedProvinceId}
@@ -235,6 +238,7 @@ export default function CheckoutPage() {
                          </select>
 
                          <select 
+                            aria-label="Select District"
                             className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
                             value={selectedDistrictId} 
                             disabled={!selectedCityId}
@@ -248,10 +252,18 @@ export default function CheckoutPage() {
                          </select>
 
                          <select 
+                            aria-label="Select Subdistrict"
                             className="border-gray-300 rounded-md focus:ring-emerald-500 disabled:opacity-50" 
                             value={newAddress.subdistrict} 
                             disabled={!selectedDistrictId}
-                            onChange={e => setNewAddress({...newAddress, subdistrict: e.target.value})}
+                            onChange={e => {
+                               const selected = subdistricts.find(s => s.name === e.target.value)
+                               setNewAddress({
+                                 ...newAddress,
+                                 subdistrict: e.target.value,
+                                 postalCode: selected?.postalCode || newAddress.postalCode,
+                               })
+                            }}
                          >
                             <option value="">Select Subdistrict</option>
                             {subdistricts.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
@@ -261,9 +273,53 @@ export default function CheckoutPage() {
                       </div>
                       <textarea placeholder="Street Address (Optional Detail)" value={newAddress.street} onChange={e => setNewAddress({...newAddress, street: e.target.value})} className="w-full border-gray-300 rounded-md focus:ring-emerald-500" rows={2}></textarea>
                       <div className="flex justify-end gap-2 mt-2">
-                        <button onClick={() => setIsAddingAddress(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancel</button>
-                        <button onClick={() => setSelectedAddressIndex(-1)} className={`px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md shadow-sm hover:bg-emerald-700 ${selectedAddressIndex === -1 ? 'ring-2 ring-emerald-500 ring-offset-1' : ''}`}>Use This Address</button>
+                        <button
+                          onClick={() => {
+                            setIsAddingAddress(false)
+                            setSelectedAddressIndex(null)
+                            setNewAddress({ fullName: '', phone: '', street: '', province: '', city: '', district: '', subdistrict: '', postalCode: '', country: 'Singapore' })
+                            setSelectedProvinceId('')
+                            setSelectedCityId('')
+                            setSelectedDistrictId('')
+                          }}
+                          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (!newAddress.fullName || !newAddress.province) return
+                            setSelectedAddressIndex(-1)
+                            setIsAddingAddress(false)
+                          }}
+                          className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md shadow-sm hover:bg-emerald-700 disabled:opacity-50"
+                          disabled={!newAddress.fullName || !newAddress.province}
+                        >
+                          Use This Address
+                        </button>
                       </div>
+                    </div>
+                  ) : selectedAddressIndex === -1 ? (
+                    /* New address selected — show summary */
+                    <div className="border border-emerald-600 ring-2 ring-emerald-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-gray-900 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" /> New Address Selected
+                        </span>
+                        <button
+                          onClick={() => setIsAddingAddress(true)}
+                          className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                      <p className="text-sm font-medium">{newAddress.fullName} · {newAddress.phone}</p>
+                      {newAddress.street && <p className="text-sm text-gray-600">{newAddress.street}</p>}
+                      <p className="text-sm text-gray-600">
+                        {[newAddress.subdistrict, newAddress.district, newAddress.city, newAddress.province].filter(Boolean).join(', ')}
+                        {newAddress.postalCode && ` ${newAddress.postalCode}`}
+                      </p>
+                      <p className="text-sm text-gray-600">{newAddress.country}</p>
                     </div>
                   ) : user.addresses?.length > 0 ? (
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -299,11 +355,10 @@ export default function CheckoutPage() {
                     </button>
                   )}
 
-                  {(user.addresses?.length > 0 || selectedAddressIndex === -1) && (
+                  {selectedAddressIndex !== null && selectedAddressIndex >= -1 && !isAddingAddress && (
                     <button 
                       onClick={() => setStep('shipping')}
-                      disabled={selectedAddressIndex === null}
-                      className="w-full mt-4 bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="w-full mt-4 bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 transition-colors"
                     >
                       Continue to Shipping
                     </button>
