@@ -164,7 +164,7 @@ export default function CheckoutPage() {
 
       const res = await createOrder(orderData, token!)
       clearCart()
-      router.push(`/payment/success?orderId=${res.doc.id}`)
+      router.push(`/success?orderId=${res.doc.id}&method=${encodeURIComponent(paymentMethod)}`)
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Failed to create order.')

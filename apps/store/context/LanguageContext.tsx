@@ -13,7 +13,7 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('id')
+  const [locale, setLocaleState] = useState<Locale>('en')
 
   useEffect(() => {
     const savedLocale = Cookies.get('NEXT_LOCALE') as Locale

@@ -144,7 +144,7 @@ export const Settings: GlobalConfig = {
               name: 'currencySymbol',
               type: 'text',
               required: false,
-              defaultValue: '$',
+              defaultValue: 'S$',
               label: 'Currency Symbol',
             },
             {
@@ -235,7 +235,7 @@ export const Settings: GlobalConfig = {
               type: 'select',
               hasMany: true,
               required: true,
-              defaultValue: ['id', 'en'],
+              defaultValue: ['en', 'id'],
               label: 'Supported Languages',
               options: [
                 { label: 'Indonesian (ID)', value: 'id' },
@@ -246,7 +246,7 @@ export const Settings: GlobalConfig = {
               name: 'defaultLanguage',
               type: 'select',
               required: true,
-              defaultValue: 'id',
+              defaultValue: 'en',
               label: 'Default Language',
               options: [
                 { label: 'Indonesian (ID)', value: 'id' },

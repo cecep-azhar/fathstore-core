@@ -3,20 +3,14 @@
 import React from 'react'
 import { useCart } from '@/context/CartContext'
 import { useLanguage } from '@/context/LanguageContext'
+import { useCurrency } from '@/providers/CurrencyProvider'
 import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-
-function formatRupiah(amount: number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount)
-}
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, clearCart } = useCart()
   const { t } = useLanguage()
+  const { formatPrice } = useCurrency()
   
   const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0)
 
@@ -75,7 +69,7 @@ export default function CartPage() {
                                                 <p className="text-gray-500 dark:text-gray-400">{t('cart.defaultVariant')}</p>
                                             )}
                                         </div>
-                                        <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{formatRupiah(item.price)}</p>
+                                        <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{formatPrice(item.price)}</p>
                                     </div>
 
                                     <div className="mt-4 sm:mt-0 sm:pr-9">
@@ -118,11 +112,11 @@ export default function CartPage() {
                 <dl className="mt-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <dt className="text-sm text-gray-600 dark:text-gray-400">{t('cart.subtotal')}</dt>
-                        <dd className="text-sm font-medium text-gray-900 dark:text-white">{formatRupiah(subtotal)}</dd>
+                        <dd className="text-sm font-medium text-gray-900 dark:text-white">{formatPrice(subtotal)}</dd>
                     </div>
                      <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
                         <dt className="text-base font-bold text-gray-900 dark:text-white">{t('cart.orderTotal')}</dt>
-                        <dd className="text-base font-bold text-gray-900 dark:text-white">{formatRupiah(subtotal)}</dd>
+                        <dd className="text-base font-bold text-gray-900 dark:text-white">{formatPrice(subtotal)}</dd>
                     </div>
                 </dl>
 
