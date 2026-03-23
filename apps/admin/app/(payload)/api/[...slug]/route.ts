@@ -6,3 +6,4 @@ export const POST = (req: Request, context: any) => REST_POST(configPromise)(req
 export const DELETE = (req: Request, context: any) => REST_DELETE(configPromise)(req, context)
 export const PATCH = (req: Request, context: any) => REST_PATCH(configPromise)(req, context)
 export const OPTIONS = (req: Request, context: any) => REST_OPTIONS(configPromise)(req, context)
+
