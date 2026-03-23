@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -31,6 +32,12 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+    plugins: [
+          vercelBlobStorage({
+                  collections: { media: true },
+                  token: process.env.BLOB_READ_WRITE_TOKEN,
+          }),
+        ],
   admin: {
     user: 'users',
     importMap: {
