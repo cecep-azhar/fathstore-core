@@ -1,115 +1,75 @@
 'use client'
 
 import Link from 'next/link'
-import { Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react'
+import { Instagram, Youtube, Mail, MapPin, Phone, Github, Twitter } from 'lucide-react'
 
 export function Footer({ settings }: { settings: any }) {
   const currentYear = new Date().getFullYear()
-  const appName = settings?.appName || 'LMS WIJAD.com'
-  const appDescription = settings?.appDescription || 'Islamic Learning Management System'
+  const appName = settings?.appName || 'FathStore'
 
   return (
-    <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-      <div className="mx-auto max-w-mobile-max px-4 py-12 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{appName}</h3>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{appDescription}</p>
-          </div>
-
-          <div className="flex justify-center space-x-6">
-            {settings?.socialLinks?.facebook && (
-              <a
-                href={settings.socialLinks.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                <span className="sr-only">Facebook</span>
-                <Facebook className="h-6 w-6" />
-              </a>
-            )}
-            {settings?.socialLinks?.twitter && (
-              <a
-                href={settings.socialLinks.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                <span className="sr-only">Twitter</span>
-                <Twitter className="h-6 w-6" />
-              </a>
-            )}
-            {settings?.socialLinks?.instagram && (
-              <a
-                href={settings.socialLinks.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                <span className="sr-only">Instagram</span>
-                <Instagram className="h-6 w-6" />
-              </a>
-            )}
-            {settings?.socialLinks?.youtube && (
-              <a
-                href={settings.socialLinks.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                <span className="sr-only">YouTube</span>
-                <Youtube className="h-6 w-6" />
-              </a>
-            )}
-            {settings?.contactEmail && (
-              <a
-                href={`mailto:${settings.contactEmail}`}
-                className="text-gray-400 hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                <span className="sr-only">Email</span>
-                <Mail className="h-6 w-6" />
-              </a>
-            )}
-          </div>
-
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-              <Link
-                href="/"
-                className="hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                Beranda
-              </Link>
-              <Link
-                href="/dashboard"
-                className="hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/profile"
-                className="hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                Profil
-              </Link>
-              <Link
-                href="/admin"
-                className="hover:text-islamic-green dark:hover:text-islamic-gold transition-colors"
-              >
-                Admin
-              </Link>
-            </div>
-            <br />
-            <br />
-            ***
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              &copy; {currentYear} by {appName}. Hak cipta dilindungi. <br />
-              Development with love by Cecep Azhar @ Bandung Indonesia.
+    <footer className="bg-background border-t py-16 sm:py-24">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+          {/* Brand & Social */}
+          <div className="space-y-8 max-w-sm">
+            <Link href="/" className="inline-block">
+              <span className="text-2xl font-black tracking-[0.2em] uppercase text-primary">
+                {appName}
+              </span>
+            </Link>
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground leading-loose">
+              Redefining luxury through minimalist essentials. Crafted for those who value substance over appearance.
             </p>
-            {/* <p className="text-sm text-gray-500 dark:text-gray-400">
-              Development with love by Cecep Azhar @ Bandung Indonesia.
-            </p> */}
+            <div className="flex gap-6">
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><Instagram className="h-5 w-5" /></Link>
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="h-5 w-5" /></Link>
+              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><Youtube className="h-5 w-5" /></Link>
+            </div>
+          </div>
+
+          {/* Links Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 sm:gap-x-24 gap-y-12">
+            <div className="space-y-6">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Shop</h4>
+              <ul className="space-y-4">
+                <li><Link href="/" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">All Products</Link></li>
+                <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">New Arrivals</Link></li>
+                <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">Best Sellers</Link></li>
+              </ul>
+            </div>
+            
+            <div className="space-y-6">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Support</h4>
+              <ul className="space-y-4">
+                <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">Shipping</Link></li>
+                <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">Returns</Link></li>
+                <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div className="space-y-6 col-span-2 sm:col-span-1">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Contact</h4>
+              <ul className="space-y-4">
+                <li className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <Mail className="h-4 w-4" /> help@fathstore.com
+                </li>
+                <li className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <MapPin className="h-4 w-4" /> Bandung, ID
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Banner */}
+        <div className="mt-24 pt-8 border-t border-primary/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            &copy; {currentYear} {appName}. All rights reserved.
+          </p>
+          <div className="flex gap-8">
+            <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary">Privacy</Link>
+            <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary">Terms</Link>
           </div>
         </div>
       </div>

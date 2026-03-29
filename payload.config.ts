@@ -72,15 +72,84 @@ export default buildConfig({
           },
         },
         {
-          name: 'tenantId',
-          type: 'relationship',
-          relationTo: 'tenants',
+          name: 'phone',
+          type: 'text',
           required: false,
-          label: 'Tenant',
-          admin: {
-            // Only show for existing users, not on first user creation
-            condition: (data, siblingData, { user }) => !!user,
-          },
+          label: 'Nomor Telepon',
+        },
+        {
+          name: 'dateOfBirth',
+          type: 'date',
+          required: false,
+          label: 'Tanggal Lahir',
+        },
+        {
+          name: 'avatar',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          label: 'Avatar',
+        },
+        {
+          name: 'addresses',
+          type: 'array',
+          label: 'Buku Alamat',
+          fields: [
+            {
+              name: 'label',
+              type: 'select',
+              required: true,
+              label: 'Label',
+              defaultValue: 'home',
+              options: [
+                { label: 'Rumah', value: 'home' },
+                { label: 'Kantor', value: 'office' },
+                { label: 'Lainnya', value: 'other' },
+              ],
+            },
+            {
+              name: 'fullName',
+              type: 'text',
+              required: true,
+              label: 'Nama Penerima',
+            },
+            {
+              name: 'street',
+              type: 'textarea',
+              required: true,
+              label: 'Alamat Lengkap',
+            },
+            {
+              name: 'city',
+              type: 'text',
+              required: true,
+              label: 'Kota',
+            },
+            {
+              name: 'province',
+              type: 'text',
+              required: true,
+              label: 'Provinsi',
+            },
+            {
+              name: 'postalCode',
+              type: 'text',
+              required: true,
+              label: 'Kode Pos',
+            },
+          ],
+        },
+        {
+          name: 'subscribedToNewsletter',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'Berlangganan Newsletter',
+        },
+        {
+          name: 'marketingNotes',
+          type: 'textarea',
+          required: false,
+          label: 'Catatan Marketing',
         },
         {
           name: 'gformValidated',
@@ -89,7 +158,6 @@ export default buildConfig({
           label: 'Validasi GForm',
           admin: {
             description: 'Apakah user sudah menyelesaikan validasi Google Form',
-            // Only show for existing users, not on first user creation
             condition: (data, siblingData, { user }) => !!user,
           },
         },
@@ -265,6 +333,9 @@ export default buildConfig({
     },
     {
       slug: 'categories',
+      access: {
+        read: () => true,
+      },
       admin: {
         useAsTitle: 'name',
       },
@@ -290,6 +361,13 @@ export default buildConfig({
           name: 'description',
           type: 'textarea',
           required: false,
+        },
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          label: 'Gambar Kategori',
         },
       ],
     },
@@ -593,6 +671,12 @@ export default buildConfig({
             height: 1024,
             position: 'centre',
           },
+          {
+            name: 'hero',
+            width: 1920,
+            height: 1080,
+            position: 'centre',
+          },
         ],
         adminThumbnail: 'thumbnail',
         mimeTypes: ['image/*', 'application/pdf'],
@@ -665,6 +749,302 @@ export default buildConfig({
         },
       ],
     },
+    {
+      slug: 'products',
+      access: {
+        read: () => true,
+      },
+      admin: {
+        useAsTitle: 'title',
+        defaultColumns: ['title', 'status', 'productType', 'vendor', 'createdAt'],
+        description: 'Products available in the storefront',
+        group: 'Shop',
+      },
+      fields: [
+        { name: 'title', type: 'text', required: true, label: 'Product Title' },
+        {
+          name: 'slug',
+          type: 'text',
+          required: true,
+          unique: true,
+          label: 'Slug',
+        },
+        {
+          name: 'description',
+          type: 'richText',
+          required: false,
+          editor: lexicalEditor({}),
+          label: 'Description',
+        },
+        {
+          name: 'thumbnail',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          label: 'Thumbnail Image',
+        },
+        {
+          name: 'images',
+          type: 'array',
+          label: 'Product Gallery',
+          fields: [
+            { name: 'image', type: 'upload', relationTo: 'media', required: true },
+            { name: 'alt', type: 'text', required: false, label: 'Alt Text' },
+          ],
+        },
+        {
+          name: 'price',
+          type: 'number',
+          required: true,
+          min: 0,
+          label: 'Price (Rp)',
+        },
+        {
+          name: 'compareAtPrice',
+          type: 'number',
+          required: false,
+          min: 0,
+          label: 'Compare-at Price (Rp)',
+        },
+        {
+          name: 'sku',
+          type: 'text',
+          required: false,
+          unique: true,
+          label: 'SKU',
+        },
+        {
+          name: 'barcode',
+          type: 'text',
+          required: false,
+          label: 'Barcode',
+        },
+        {
+          name: 'trackInventory',
+          type: 'checkbox',
+          defaultValue: true,
+          label: 'Track Inventory',
+        },
+        {
+          name: 'stock',
+          type: 'number',
+          required: false,
+          defaultValue: 0,
+          min: 0,
+          label: 'Inventory Quantity',
+        },
+        {
+          name: 'continueSellingWhenOutOfStock',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'Continue selling when out of stock',
+        },
+        {
+          name: 'hasVariants',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'This product has multiple variants',
+        },
+        {
+          name: 'options',
+          type: 'array',
+          label: 'Product Options',
+          fields: [
+            { name: 'name', type: 'text', required: true },
+            {
+              name: 'values',
+              type: 'array',
+              fields: [{ name: 'value', type: 'text', required: true }],
+            },
+          ],
+        },
+        {
+          name: 'variants',
+          type: 'array',
+          label: 'Variants',
+          fields: [
+            { name: 'variantTitle', type: 'text', required: true },
+            { name: 'sku', type: 'text', required: false },
+            { name: 'price', type: 'number', required: true },
+            { name: 'stock', type: 'number', required: false },
+            { name: 'image', type: 'upload', relationTo: 'media', required: false },
+          ],
+        },
+        {
+          name: 'shipping',
+          type: 'group',
+          label: 'Shipping Information',
+          fields: [
+            { name: 'isPhysicalProduct', type: 'checkbox', defaultValue: true },
+            { name: 'weight', type: 'number', required: false },
+            { name: 'length', type: 'number', required: false },
+            { name: 'width', type: 'number', required: false },
+            { name: 'height', type: 'number', required: false },
+          ],
+        },
+        {
+          name: 'category',
+          type: 'relationship',
+          relationTo: 'categories',
+          required: false,
+          label: 'Category',
+        },
+        {
+          name: 'productType',
+          type: 'text',
+          required: false,
+          label: 'Product Type',
+        },
+        {
+          name: 'vendor',
+          type: 'text',
+          required: false,
+          label: 'Vendor',
+        },
+        {
+          name: 'collections',
+          type: 'text',
+          required: false,
+          label: 'Collections',
+        },
+        {
+          name: 'status',
+          type: 'select',
+          required: true,
+          defaultValue: 'draft',
+          options: [
+            { label: 'Draft', value: 'draft' },
+            { label: 'Active', value: 'active' },
+            { label: 'Archived', value: 'archived' },
+          ],
+        },
+        {
+          name: 'featured',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'Featured Product',
+        },
+        {
+          name: 'seo',
+          type: 'group',
+          label: 'Search Engine Listing',
+          fields: [
+            { name: 'metaTitle', type: 'text', required: false },
+            { name: 'metaDescription', type: 'textarea', required: false },
+            { name: 'urlHandle', type: 'text', required: false },
+          ],
+        },
+        {
+          name: 'publishedAt',
+          type: 'date',
+          label: 'Published At',
+        },
+      ],
+    },
+    {
+      slug: 'provinces',
+      admin: { useAsTitle: 'name', group: 'Locations' },
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        { name: 'code', type: 'text', required: true, unique: true },
+      ],
+    },
+    {
+      slug: 'cities',
+      admin: { useAsTitle: 'name', group: 'Locations' },
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        {
+          name: 'type',
+          type: 'select',
+          options: [
+            { label: 'Kota', value: 'Kota' },
+            { label: 'Kabupaten', value: 'Kabupaten' },
+          ],
+          defaultValue: 'Kota',
+        },
+        { name: 'province', type: 'relationship', relationTo: 'provinces', required: true },
+        { name: 'postalCode', type: 'text' },
+      ],
+    },
+    {
+      slug: 'districts',
+      admin: { useAsTitle: 'name', group: 'Locations' },
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        { name: 'city', type: 'relationship', relationTo: 'cities', required: true },
+      ],
+    },
+    {
+      slug: 'subdistricts',
+      admin: { useAsTitle: 'name', group: 'Locations' },
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        { name: 'district', type: 'relationship', relationTo: 'districts', required: true },
+        { name: 'postalCode', type: 'text' },
+      ],
+    },
+    {
+      slug: 'orders',
+      admin: {
+        useAsTitle: 'orderNumber',
+        group: 'Shop',
+      },
+      fields: [
+        { name: 'orderNumber', type: 'text', required: true, unique: true },
+        { name: 'customer', type: 'relationship', relationTo: 'users', required: true },
+        { name: 'items', type: 'array', fields: [
+          { name: 'product', type: 'relationship', relationTo: 'products' },
+          { name: 'productTitle', type: 'text', required: true },
+          { name: 'quantity', type: 'number', required: true, defaultValue: 1 },
+          { name: 'unitPrice', type: 'number', required: true },
+        ]},
+        { name: 'total', type: 'number', required: true },
+        { name: 'status', type: 'select', options: [{ label: 'Pending', value: 'pending' }, { label: 'Paid', value: 'paid' }, { label: 'Completed', value: 'completed' }], defaultValue: 'pending' },
+      ],
+    },
+    {
+      slug: 'reviews',
+      admin: { group: 'Shop' },
+      fields: [
+        { name: 'product', type: 'relationship', relationTo: 'products', required: true },
+        { name: 'author', type: 'relationship', relationTo: 'users', required: true },
+        { name: 'rating', type: 'number', required: true, min: 1, max: 5 },
+        { name: 'title', type: 'text', required: true },
+        { name: 'body', type: 'textarea', required: true },
+      ],
+    },
+    {
+      slug: 'discounts',
+      admin: { group: 'Marketing' },
+      fields: [
+        { name: 'code', type: 'text', required: true, unique: true },
+        { name: 'type', type: 'select', options: [{ label: 'Percentage', value: 'percentage' }, { label: 'Fixed', value: 'fixed' }], required: true },
+        { name: 'value', type: 'number', required: true },
+        { name: 'isActive', type: 'checkbox', defaultValue: true },
+      ],
+    },
+    {
+      slug: 'licenses',
+      admin: { group: 'Marketing' },
+      fields: [
+        { name: 'key', type: 'text', required: true, unique: true },
+        { name: 'tenant', type: 'relationship', relationTo: 'tenants', required: true },
+        { name: 'plan', type: 'select', options: [{ label: 'Free', value: 'free' }, { label: 'Pro', value: 'pro' }], defaultValue: 'free' },
+      ],
+    },
+    {
+      slug: 'pages',
+      admin: { group: 'Content' },
+      fields: [
+        { name: 'title', type: 'text', required: true },
+        { name: 'slug', type: 'text', required: true, unique: true },
+        { name: 'layout', type: 'blocks', blocks: [
+          { slug: 'hero', fields: [{ name: 'headline', type: 'text' }, { name: 'subheadline', type: 'text' }] },
+          { slug: 'content', fields: [{ name: 'richText', type: 'richText' }] },
+        ]},
+      ],
+    },
   ],
   globals: [
     {
@@ -678,13 +1058,13 @@ export default buildConfig({
           name: 'appName',
           type: 'text',
           required: true,
-          defaultValue: 'LMS WIJAD.com',
+          defaultValue: 'FathStore',
         },
         {
           name: 'appDescription',
           type: 'textarea',
           required: false,
-          defaultValue: 'Islamic Learning Management System',
+          defaultValue: 'Toko Online Berkah & Berkualitas',
         },
         {
           name: 'logoUrl',

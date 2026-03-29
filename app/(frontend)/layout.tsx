@@ -48,17 +48,21 @@ async function getSettings() {
   }
 }
 
+import { CartProvider } from '@/context/CartContext'
+
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const [user, settings] = await Promise.all([getUser(), getSettings()])
 
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
-        <div className="flex min-h-screen flex-col">
-          <Header user={user} settings={settings || undefined} />
-          <main className="flex-1">{children}</main>
-          <Footer settings={settings} />
-        </div>
+        <CartProvider>
+          <div className="flex min-h-screen flex-col">
+            <Header user={user} settings={settings || undefined} />
+            <main className="flex-1">{children}</main>
+            <Footer settings={settings} />
+          </div>
+        </CartProvider>
       </body>
     </html>
   )

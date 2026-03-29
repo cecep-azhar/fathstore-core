@@ -3,10 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, BookOpen, LogOut } from 'lucide-react'
-import { useState } from 'react'
+import { Menu, X, ShoppingBag, LogOut, LayoutDashboard, User, History, Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { useCart } from '@/context/CartContext'
+import { CartDrawer } from '@/components/CartDrawer'
 
 interface Settings {
   appName?: string
@@ -18,121 +20,109 @@ interface Settings {
 
 export function Header({ user, settings }: { user: any; settings?: Settings }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const { logout } = useAuth()
+  const { totalItems, setIsOpen } = useCart()
 
-  const appName = settings?.appName || 'LMS WIJAD'
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  const navigation = user
-    ? [
-        { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Materi', href: '/' },
-        { name: 'Profil', href: '/profile' },
-        { name: 'Riwayat              ', href: '/history' },
-      ]
-    : [
-        { name: 'Materi', href: '/' },
-        { name: 'Masuk', href: '/login' },
-        { name: 'Daftar', href: '/register' },
-      ]
+  const appName = settings?.appName || 'FathStore'
 
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
-      <nav className="mx-auto max-w-mobile-max px-4 sm:px-6 lg:px-8" aria-label="Top">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              {settings?.logoUrl?.url ? (
-                <Image
-                  src={settings.logoUrl.url}
-                  alt={appName}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 object-contain"
-                />
-              ) : (
-                <BookOpen className="h-8 w-8 text-islamic-green dark:text-islamic-gold" />
-              )}
-              <span className="text-xl font-bold text-gray-900 dark:text-white">{appName}</span>
-            </Link>
-          </div>
-
-          <div className="hidden md:flex md:items-center md:space-x-6">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`text-sm font-medium transition-colors ${
-                  pathname === item.href
-                    ? 'text-islamic-green dark:text-islamic-gold'
-                    : 'text-gray-700 hover:text-islamic-green dark:text-gray-300 dark:hover:text-islamic-gold'
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {user && (
+    <>
+      <header 
+        className={`sticky top-0 z-50 transition-all duration-500 ${
+          scrolled ? 'bg-background/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'
+        }`}
+      >
+        <nav className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16" aria-label="Top">
+          <div className="flex items-center justify-between relative h-10">
+            {/* Left Section: Mobile Menu Toggle */}
+            <div className="flex md:hidden">
               <button
-                onClick={() => logout()}
-                className="flex items-center space-x-1 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                type="button"
+                className="p-2 text-foreground"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
-            )}
-            <ThemeToggle />
-          </div>
+            </div>
 
-          <div className="flex items-center space-x-2 md:hidden">
-            <ThemeToggle />
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden pb-3 pt-2 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  pathname === item.href
-                    ? 'bg-islamic-green text-white dark:bg-islamic-gold dark:text-gray-900'
-                    : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
+            {/* Desktop Navigation Left */}
+            <div className="hidden md:flex items-center gap-8 flex-1">
+              <Link href="/" className={`text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors ${pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}>
+                Shop
               </Link>
-            ))}
-            {user && (
-              <button
-                onClick={() => {
-                  logout()
-                  setMobileMenuOpen(false)
-                }}
-                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-              >
-                <span className="flex items-center space-x-2">
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </span>
+              <Link href="/about" className={`text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors ${pathname === '/about' ? 'text-primary' : 'text-muted-foreground'}`}>
+                About
+              </Link>
+            </div>
+
+            {/* Center Section: Logo */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Link href="/" className="flex items-center gap-2 group">
+                {settings?.logoUrl?.url ? (
+                  <Image
+                    src={settings.logoUrl.url}
+                    alt={appName}
+                    width={100}
+                    height={32}
+                    className="h-8 w-auto object-contain"
+                  />
+                ) : (
+                  <span className="text-2xl font-black tracking-[0.2em] uppercase text-primary">
+                    {appName}
+                  </span>
+                )}
+              </Link>
+            </div>
+
+            {/* Right Section: Icons */}
+            <div className="flex items-center justify-end gap-3 sm:gap-6 flex-1">
+              <button className="hidden sm:block p-2 hover:text-primary transition-colors">
+                <Search className="h-5 w-5" />
               </button>
-            )}
+              
+              <Link href={user ? '/dashboard' : '/login'} className="p-2 hover:text-primary transition-colors">
+                <User className="h-5 w-5" />
+              </Link>
+
+              <button 
+                onClick={() => setIsOpen(true)}
+                className="p-2 hover:text-primary transition-colors relative"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-        )}
-      </nav>
-    </header>
+
+          {/* Mobile menu Overlay */}
+          <div 
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              mobileMenuOpen ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="space-y-4 pb-4">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold uppercase tracking-widest py-2 border-b">Shop</Link>
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold uppercase tracking-widest py-2 border-b">About</Link>
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold uppercase tracking-widest py-2 border-b">Login</Link>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <CartDrawer />
+    </>
   )
 }

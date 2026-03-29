@@ -1,30 +1,62 @@
 {
   "name": "fathstore-core",
   "version": "1.0.0",
-  "description": "FathStore — Multi-tenant E-Commerce Monorepo",
+  "description": "FathStore — Unified Next.js 16.2 AI-Powered Islamic E-Commerce",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096\" pnpm --recursive --parallel run dev",
-    "dev:admin": "pnpm --filter @fathstore/admin dev",
-    "dev:store": "pnpm --filter @fathstore/store dev",
-    "dev:member": "pnpm --filter @fathstore/member dev",
-    "build": "pnpm --recursive run build",
-    "build:admin": "pnpm --filter @fathstore/admin build",
-    "build:store": "pnpm --filter @fathstore/store build",
-    "build:member": "pnpm --filter @fathstore/member build",
-    "clean": "node scripts/clean.js",
-    "lint": "pnpm --recursive run lint",
-    "typecheck": "pnpm --recursive run typecheck"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "payload": "payload",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap"
   },
   "engines": {
     "node": ">=20.9.0"
   },
+  "dependencies": {
+    "@next/env": "^16.2.0",
+    "@payloadcms/db-postgres": "^3.75.0",
+    "@payloadcms/next": "^3.75.0",
+    "@payloadcms/plugin-cloud-storage": "^3.75.0",
+    "@payloadcms/richtext-lexical": "^3.75.0",
+    "@payloadcms/storage-vercel-blob": "^3.75.0",
+    "@payloadcms/ui": "^3.75.0",
+    "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
+    "drizzle-orm": "^0.36.4",
+    "graphql": "^16.9.0",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.460.0",
+    "next": "^16.2.0",
+    "next-intl": "^3.26.0",
+    "next-themes": "^0.4.6",
+    "payload": "^3.75.0",
+    "pg": "^8.18.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sharp": "^0.33.5",
+    "tailwind-merge": "^2.5.5",
+    "uuid": "^11.1.0"
+  },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "cross-env": "^7.0.3"
-  },
-  "dependencies": {
-    "pg": "^8.18.0"
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^16.2.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2"
   }
 }

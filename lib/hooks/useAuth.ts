@@ -9,6 +9,7 @@ export interface User {
   name: string
   role: 'admin' | 'member'
   gformValidated?: boolean
+  createdAt?: string
 }
 
 export function useAuth() {
