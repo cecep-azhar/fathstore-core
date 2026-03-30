@@ -1,11 +1,11 @@
 {
-  "name": "LMS WIJAD.com",
-  "short_name": "LMS WIJAD",
-  "description": "Islamic Learning Management System",
+  "name": "FathStore",
+  "short_name": "FathStore",
+  "description": "Toko online premium dengan produk pilihan berkualitas tinggi.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#006B3F",
+  "theme_color": "#b45309",
   "icons": [
     {
       "src": "/logo.svg",

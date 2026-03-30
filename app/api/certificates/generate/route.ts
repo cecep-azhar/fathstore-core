@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import { BRAND } from '@/config/brand'
 
 export async function POST(req: NextRequest) {
   try {
@@ -95,8 +96,8 @@ export async function POST(req: NextRequest) {
       color: rgb(0.4, 0.4, 0.4),
     })
 
-    // Draw Footer
-    const footerText = 'LMS WIJAD.com - Islamic Learning Management System'
+    // Teks footer menggunakan nama toko dari BRAND config
+    const footerText = `${BRAND.name} — ${BRAND.domain}`
     const footerWidth = textFont.widthOfTextAtSize(footerText, 12)
     page.drawText(footerText, {
       x: (width - footerWidth) / 2,

@@ -1,4 +1,4 @@
-## LMS WIJAD.com - Quick Start Guide
+## FathStore - Quick Start Guide
 
 ### Installation Steps
 

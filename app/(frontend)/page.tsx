@@ -1,182 +1,148 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { ProductCard } from '@/components/ProductCard'
-import { Search, ShoppingBag, ArrowRight, Mail } from 'lucide-react'
-import Image from 'next/image'
+import { getProducts, getCategories } from '@/lib/store-payload'
+import { StoreProductCard } from '@/components/store/StoreProductCard'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
-interface Product {
-  id: string
-  title: string
-  description?: string
-  thumbnail?: {
-    url: string
-  }
-  category?: {
-    name: string
-  }
-  price?: number
-  slug?: string
-}
+export default async function HomePage() {
+  const [productsData, categoriesData] = await Promise.all([
+    getProducts({ limit: 8 }),
+    getCategories(),
+  ])
 
-export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/products?limit=50&where[status][equals]=active')
-        if (response.ok) {
-          const data = await response.json()
-          setProducts(data.docs || [])
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
+  const products = productsData?.docs || []
+  const categories = categoriesData?.docs || []
 
   return (
-    <div className="bg-background text-foreground">
-      {/* 1. Hero Banner */}
-      <section className="relative w-full h-[70vh] sm:h-[80vh] overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1511405946472-a37e3b5ccd47?q=80&w=2070&auto=format&fit=crop"
-          alt="Exortive Passion"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-16 lg:p-24 bg-gradient-to-t from-black/60 to-transparent">
-          <div className="max-w-[1440px] mx-auto w-full animate-fade-in">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-white/80 mb-2 block">
-              Redefine
+    <>
+      {/* Hero Section */}
+      <section className="relative h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Hero background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+          <div className="max-w-2xl">
+            <span className="inline-block text-amber-500 font-bold tracking-wider uppercase text-sm mb-4">
+              Selamat Datang di FathStore
             </span>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.9] mb-8">
-              We <br /> FathStore <br /> Passion
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6">
+              Produk <br /> Berkualitas <br /> Terpilih
             </h1>
-            <Link href="#koleksi" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-white hover:translate-x-2 transition-transform">
-              Explore Collection <ArrowRight className="h-4 w-4" />
+            <p className="text-xl text-gray-200 mb-8 max-w-lg">
+              Temukan koleksi produk premium kami yang dirancang untuk kualitas dan gaya hidup terbaik.
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-8 py-4 rounded-full transition-all hover:scale-105"
+            >
+              Belanja Sekarang
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 2. Collection Grid */}
-      <section id="koleksi" className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-24 sm:py-32">
-        <div className="grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {loading ? (
-            Array(6).fill(0).map((_, i) => (
-              <div key={i} className="aspect-[4/5] bg-secondary/50 rounded-xl animate-pulse" />
-            ))
-          ) : products.length > 0 ? (
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            <div className="col-span-full py-24 text-center">
-              <p className="text-xl font-bold uppercase tracking-widest text-muted-foreground">Coming Soon</p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Categories Grid */}
+      {categories.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 py-20">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold text-gray-900">Kategori Produk</h2>
+            <Link href="/categories" className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1">
+              Lihat Semua <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {categories.slice(0, 4).map((cat: any) => (
+              <Link
+                key={cat.id}
+                href={`/products?category=${cat.slug}`}
+                className="group relative h-64 overflow-hidden rounded-2xl bg-gray-100"
+              >
+                <div className="w-full h-full bg-gradient-to-br from-amber-100 to-amber-200" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute bottom-0 left-0 p-6">
+                  <h3 className="text-xl font-bold text-white mb-1 group-hover:translate-x-1 transition-transform drop-shadow-lg">
+                    {cat.name}
+                  </h3>
+                  {cat.description && (
+                    <p className="text-sm text-gray-200 line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {cat.description}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* 3. Mid-Page lifestyle Banner */}
-      <section className="relative w-full h-[60vh] overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1511556820780-d912e42b4980?q=80&w=1887&auto=format&fit=crop"
-          alt="Lifestyle Banner"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-          <span className="text-4xl sm:text-6xl md:text-8xl font-black text-white uppercase tracking-[0.2em] opacity-20 select-none">
-            EXORTIVE
-          </span>
-          <div className="h-px w-24 bg-white/50 my-6" />
-          <h2 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-widest">
-            Premium Lifestyle Core
-          </h2>
-        </div>
-      </section>
-
-      {/* 4. New Arrivals Section */}
-      <section className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-24 sm:py-32">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <div className="max-w-xl animate-fade-in">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mb-2 block">
-              Innovating
-            </span>
-            <h2 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter text-primary mb-4">
-              New arrivals
-            </h2>
-            <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-              We make things that work better and last longer. Our products solve real problems with clean design and honest materials. Experience the new standard.
+      {/* Featured Products */}
+      <section className="bg-gray-50 py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Produk Unggulan</h2>
+            <p className="text-gray-600">
+              Produk terbaik pilihan kami, dipilih dengan cermat untuk memenuhi kebutuhan Anda.
             </p>
           </div>
-          <Link href="#all" className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-primary group">
-            View All <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
 
-        <div className="grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
+          {products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {products.map((product: any) => (
+                <StoreProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 py-12">Belum ada produk tersedia.</p>
+          )}
 
-      {/* 5. Newsletter Section (Pre-Footer) */}
-      <section className="bg-[#F5F5F5] py-24 sm:py-32">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl font-black uppercase tracking-tighter text-primary mb-6">
-                Join our <br /> email list
-              </h2>
-              <p className="text-sm text-muted-foreground font-medium mb-10 max-w-sm">
-                Get exclusive deals and early access to new products. We respect your privacy.
-              </p>
-              <form className="relative max-w-sm group">
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className="w-full bg-transparent border-b border-primary/20 py-4 pr-12 text-sm font-bold uppercase tracking-widest outline-none focus:border-primary transition-colors"
-                />
-                <button type="submit" className="absolute right-0 top-1/2 -translate-y-1/2 p-2 hover:translate-x-1 transition-transform">
-                  <ArrowRight className="h-6 w-6" />
-                </button>
-              </form>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Information</h4>
-                <ul className="space-y-2">
-                  <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest">Ordering</Link></li>
-                  <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest">Delivery</Link></li>
-                  <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest">Returns</Link></li>
-                </ul>
-              </div>
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Legal</h4>
-                <ul className="space-y-2">
-                  <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest">Privacy Policy</Link></li>
-                  <li><Link href="#" className="text-xs font-bold text-muted-foreground hover:text-primary uppercase tracking-widest">Terms of Service</Link></li>
-                </ul>
-              </div>
-            </div>
+          <div className="mt-16 text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            >
+              Lihat Semua Produk
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* CTA Banner */}
+      <section className="relative overflow-hidden bg-black py-24 sm:py-32">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1556906781-9a412961d289?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Banner background"
+            className="h-full w-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl uppercase">
+            Produk Terbaru
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-gray-300">
+            Kami menghadirkan produk yang lebih baik dan lebih tahan lama. Rasakan standar baru kualitas.
+          </p>
+          <div className="mt-10 flex justify-center">
+            <Link
+              href="/products"
+              className="group flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black shadow-sm hover:bg-gray-200 transition-all"
+            >
+              Belanja Sekarang
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

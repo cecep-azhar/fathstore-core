@@ -8,8 +8,10 @@ import { formatCurrency } from '@/lib/utils'
 import { useState } from 'react'
 
 export default function CheckoutPage() {
-  const { cart, totalPrice, clearCart } = useCart()
+  const { items: cart, clearCart } = useCart()
   const [isOrdered, setIsOrdered] = useState(false)
+
+  const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
   const handleOrder = (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,10 +103,10 @@ export default function CheckoutPage() {
             
             <div className="space-y-6 overflow-y-auto max-h-[40vh] pr-4">
               {cart.map((item) => (
-                <div key={item.id} className="flex gap-4">
+                <div key={item.cartId} className="flex gap-4">
                   <div className="h-16 w-16 bg-secondary rounded-lg overflow-hidden flex-shrink-0">
-                    {item.thumbnail ? (
-                      <Image src={item.thumbnail} alt={item.title} width={64} height={64} className="h-full w-full object-cover" />
+                    {item.thumbnailUrl ? (
+                      <img src={item.thumbnailUrl} alt={item.title} className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center"><ShoppingBag className="h-6 w-6 text-muted-foreground/30" /></div>
                     )}
