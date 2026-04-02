@@ -7,27 +7,29 @@ import { CartProvider } from '@/context/CartContext'
 import { LanguageProvider } from '@/context/LanguageContext'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { CurrencyProvider } from '@/providers/CurrencyProvider'
+import { getSettings } from '@/lib/store-payload'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function FrontendLayout({ children }: { children: React.ReactNode }) {
+export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSettings()
+
   return (
-    <html lang="id" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-white text-gray-900 antialiased flex flex-col`}>
-        <AuthProvider>
-          <CurrencyProvider>
-            <LanguageProvider>
-              <CartProvider>
-                <StoreHeader />
-                <main className="flex-grow">
-                  {children}
-                </main>
-                <StoreFooter />
-              </CartProvider>
-            </LanguageProvider>
-          </CurrencyProvider>
-        </AuthProvider>
-      </body>
-    </html>
+    <div className="flex flex-col min-h-screen">
+      <AuthProvider>
+        <CurrencyProvider>
+          <LanguageProvider>
+            <CartProvider>
+              <StoreHeader />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <StoreFooter settings={settings} />
+            </CartProvider>
+          </LanguageProvider>
+        </CurrencyProvider>
+      </AuthProvider>
+    </div>
   )
 }
+

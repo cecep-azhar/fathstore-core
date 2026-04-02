@@ -64,6 +64,15 @@ export async function getPage(slug: string) {
   }
 }
 
+export async function getSettings() {
+  try {
+    const result = await payloadFetch<any>('/globals/settings')
+    return result || null
+  } catch {
+    return null
+  }
+}
+
 export async function createOrder(data: any, token?: string) {
   const res = await fetch(`${PAYLOAD_URL}/api/orders`, {
     method: 'POST',

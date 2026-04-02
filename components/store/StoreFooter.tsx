@@ -4,8 +4,14 @@ import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/context/LanguageContext'
 
-export function StoreFooter() {
+export function StoreFooter({
+  settings,
+}: {
+  settings?: any
+}) {
   const { t } = useLanguage()
+
+  const socialLinks = settings?.socialLinks || {}
 
   return (
     <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
@@ -22,10 +28,22 @@ export function StoreFooter() {
               {t('footer.tagline')}
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-black transition-colors"><Instagram className="w-5 h-5" /></a>
-              <a href="#" className="text-gray-400 hover:text-black transition-colors"><Twitter className="w-5 h-5" /></a>
-              <a href="#" className="text-gray-400 hover:text-black transition-colors"><Facebook className="w-5 h-5" /></a>
-              <a href="#" className="text-gray-400 hover:text-black transition-colors"><Youtube className="w-5 h-5" /></a>
+              {socialLinks.instagram && (
+                <a href={socialLinks.instagram} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Instagram className="w-5 h-5" /></a>
+              )}
+              {socialLinks.twitter && (
+                <a href={socialLinks.twitter} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Twitter className="w-5 h-5" /></a>
+              )}
+              {socialLinks.facebook && (
+                <a href={socialLinks.facebook} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Facebook className="w-5 h-5" /></a>
+              )}
+              {socialLinks.youtube && (
+                <a href={socialLinks.youtube} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Youtube className="w-5 h-5" /></a>
+              )}
+              {/* Jika tidak ada satupun yang diisi, tampilkan sample placeholder dummy */}
+              {!socialLinks.instagram && !socialLinks.twitter && !socialLinks.facebook && !socialLinks.youtube && (
+                <span className="text-xs text-amber-600">Sosmed belum disetting di Admin</span>
+              )}
             </div>
           </div>
 
