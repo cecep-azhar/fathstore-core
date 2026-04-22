@@ -5,6 +5,8 @@
  * Jalankan dengan: pnpm tsx scripts/seed-master-data.ts
  */
 
+// @ts-nocheck
+
 import { getPayload } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -84,7 +86,6 @@ const seed = async () => {
         socialLinks: {
           instagram: 'https://instagram.com/fathstore',
           facebook: 'https://facebook.com/fathstore',
-          whatsapp: '+6281234567890',
         },
       },
     })

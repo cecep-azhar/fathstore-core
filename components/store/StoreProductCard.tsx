@@ -2,6 +2,7 @@
 
 import { getMediaUrl } from '@/lib/store-utils'
 import { useCurrency } from '@/providers/CurrencyProvider'
+import Link from 'next/link'
 
 interface Product {
   id: string
@@ -23,58 +24,47 @@ export function StoreProductCard({ product }: ProductCardProps) {
   const thumbnailUrl = getMediaUrl(product.thumbnail)
 
   return (
-    <a
-      href={`/products/${product.slug}`}
-      className="group block bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 ring-1 ring-gray-100 hover:ring-0"
-    >
-      {/* Image */}
-      <div className="aspect-square bg-gray-100 overflow-hidden">
+    <Link href={`/products/${product.slug}`} className="group block">
+      <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-[#e8e8e7]">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
             alt={product.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-[1.04]"
+            onError={(e: any) => {
+              e.target.src = '/logo.svg'
+            }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
+          <img
+            src="/logo.svg"
+            alt="FathStore Logo"
+            className="h-full w-full object-contain p-8"
+            onError={(e: any) => {
+              e.target.style.display = 'none'
+            }}
+          />
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-800 line-clamp-2 group-hover:text-amber-700 transition-colors">
+      <div className="mt-3 space-y-1">
+        <h3 className="line-clamp-1 text-sm font-semibold text-zinc-800 transition-colors group-hover:text-zinc-950">
           {product.title}
         </h3>
 
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-lg font-bold text-amber-700">
-            {formatPrice(product.price)}
-          </span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-zinc-800">{formatPrice(product.price)}</span>
           {product.compareAtPrice && product.compareAtPrice > product.price && (
-            <span className="text-sm text-gray-400 line-through">
-              {formatPrice(product.compareAtPrice)}
-            </span>
+            <span className="text-xs text-zinc-500 line-through">{formatPrice(product.compareAtPrice)}</span>
           )}
         </div>
 
         {product.stock !== undefined && product.stock <= 0 && (
-          <span className="mt-2 inline-block text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded">
+          <span className="inline-block rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
             Out of Stock
           </span>
         )}
-
-        {product.variants && product.variants.length > 0 && (
-          <p className="mt-1 text-xs text-gray-500">
-            {product.variants.length} variant{product.variants.length > 1 ? 's' : ''}
-          </p>
-        )}
       </div>
-    </a>
+    </Link>
   )
 }

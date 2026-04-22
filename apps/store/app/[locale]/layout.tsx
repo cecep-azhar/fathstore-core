@@ -14,6 +14,8 @@ import { LanguageProvider } from '@/context/LanguageContext'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { CurrencyProvider } from '@/providers/CurrencyProvider'
+import { WishlistProvider } from '@/context/WishlistContext'
+import { RecentlyViewedProvider } from '@/context/RecentlyViewedContext'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 
@@ -35,13 +37,17 @@ export default async function RootLayout({
             <LanguageProvider>
               <AuthProvider>
                 <CurrencyProvider>
-                  <CartProvider>
-                    <Header />
-                    <main className="flex-grow">
-                      {children}
-                    </main>
-                    <Footer />
-                  </CartProvider>
+                  <WishlistProvider>
+                    <RecentlyViewedProvider>
+                      <CartProvider>
+                        <Header />
+                        <main className="flex-grow">
+                          {children}
+                        </main>
+                        <Footer />
+                      </CartProvider>
+                    </RecentlyViewedProvider>
+                  </WishlistProvider>
                 </CurrencyProvider>
               </AuthProvider>
             </LanguageProvider>

@@ -134,6 +134,20 @@ export const Users: CollectionConfig = {
       ],
     },
 
+    // ── Customer Groups ─────────────────────────────────────
+    {
+      name: 'groups',
+      type: 'relationship',
+      relationTo: 'customerGroups',
+      hasMany: true,
+      required: false,
+      label: 'Customer Groups',
+      admin: {
+        description: 'Groups this customer belongs to',
+        position: 'sidebar',
+      },
+    },
+
     // ── Marketing ─────────────────────────────────────────
     {
       name: 'subscribedToNewsletter',

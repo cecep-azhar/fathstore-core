@@ -1,7 +1,6 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useAuth } from '@/providers/AuthProvider'
 
 export interface CartItem {
   cartId: string
@@ -19,11 +18,16 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[]
+  cart: CartItem[]
   addToCart: (item: Omit<CartItem, 'cartId'>) => void
   removeFromCart: (cartId: string) => void
   updateQuantity: (cartId: string, quantity: number) => void
   clearCart: () => void
   cartCount: number
+  totalItems: number
+  totalPrice: number
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -33,12 +37,10 @@ const CART_KEY = 'fathstore-cart'
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [isInitialized, setIsInitialized] = useState(false)
-  const { user, isLoading: authLoading } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount (works for both guest and logged-in users)
   useEffect(() => {
-    if (authLoading) return
-    
     try {
       const saved = localStorage.getItem(CART_KEY)
       if (saved) {
@@ -48,7 +50,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
     setIsInitialized(true)
-  }, [authLoading])
+  }, [])
 
   // Save to localStorage on change
   useEffect(() => {
@@ -72,6 +74,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { ...newItem, cartId }]
     })
+    setIsOpen(true)
   }
 
   const removeFromCart = (cartId: string) => {
@@ -89,9 +92,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = () => setItems([])
 
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0)
+  const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, cartCount }}>
+    <CartContext.Provider
+      value={{
+        items,
+        cart: items,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        cartCount,
+        totalItems: cartCount,
+        totalPrice,
+        isOpen,
+        setIsOpen,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )

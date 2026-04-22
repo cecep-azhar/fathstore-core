@@ -2,22 +2,29 @@ const PAYLOAD_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:300
 
 async function payloadFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${PAYLOAD_URL}/api${endpoint}`
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    next: { revalidate: 60 },
-  })
+  
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+      next: { revalidate: 60 },
+    })
 
-  if (!res.ok) {
-    console.error(`Payload API error: ${res.status} for ${endpoint}`)
-    // Return empty docs instead of throwing to prevent page crash
+    if (!res.ok) {
+      console.error(`Payload API error: ${res.status} for ${endpoint}`)
+      // Return empty docs instead of throwing to prevent page crash
+      return { docs: [], totalDocs: 0, page: 1, totalPages: 1, hasNextPage: false } as T
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error(`Payload fetch failed for ${endpoint}:`, error)
+    // Return empty result to prevent page crash
     return { docs: [], totalDocs: 0, page: 1, totalPages: 1, hasNextPage: false } as T
   }
-
-  return res.json()
 }
 
 export async function getProducts(params?: {

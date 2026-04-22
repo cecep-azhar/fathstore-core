@@ -14,84 +14,112 @@ export function StoreFooter({
   const socialLinks = settings?.socialLinks || {}
 
   return (
-    <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-black tracking-tighter text-gray-900">
-                FATHSTORE
-              </span>
-            </Link>
-            <p className="text-gray-500 mb-6 text-sm leading-relaxed">
-              {t('footer.tagline')}
+    <footer className="border-t border-zinc-200 bg-[#ececea] pb-8 pt-16">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
+          <section>
+            <h2 className="text-4xl font-black leading-tight tracking-tight text-zinc-900">
+              Join our email list
+            </h2>
+            <p className="mt-3 max-w-md text-sm text-zinc-600">
+              Get exclusive deals and early access to new products.
             </p>
-            <div className="flex gap-4">
-              {socialLinks.instagram && (
-                <a href={socialLinks.instagram} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Instagram className="w-5 h-5" /></a>
-              )}
-              {socialLinks.twitter && (
-                <a href={socialLinks.twitter} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Twitter className="w-5 h-5" /></a>
-              )}
-              {socialLinks.facebook && (
-                <a href={socialLinks.facebook} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Facebook className="w-5 h-5" /></a>
-              )}
-              {socialLinks.youtube && (
-                <a href={socialLinks.youtube} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors"><Youtube className="w-5 h-5" /></a>
-              )}
-              {/* Jika tidak ada satupun yang diisi, tampilkan sample placeholder dummy */}
-              {!socialLinks.instagram && !socialLinks.twitter && !socialLinks.facebook && !socialLinks.youtube && (
-                <span className="text-xs text-amber-600">Sosmed belum disetting di Admin</span>
-              )}
-            </div>
-          </div>
-
-          {/* Shop Links */}
-          <div>
-            <h3 className="font-bold text-gray-900 mb-4">{t('footer.shop')}</h3>
-            <ul className="space-y-3 text-sm text-gray-500">
-              <li><Link href="/products" className="hover:text-black transition-colors">{t('footer.allProducts')}</Link></li>
-              <li><Link href="/products?sort=newest" className="hover:text-black transition-colors">{t('footer.newArrivals')}</Link></li>
-              <li><Link href="/categories" className="hover:text-black transition-colors">{t('footer.categories')}</Link></li>
-            </ul>
-          </div>
-
-          {/* Support Links */}
-          <div>
-            <h3 className="font-bold text-gray-900 mb-4">{t('footer.support')}</h3>
-            <ul className="space-y-3 text-sm text-gray-500">
-              <li><Link href="/faq" className="hover:text-black transition-colors">{t('footer.faq')}</Link></li>
-              <li><Link href="/shipping" className="hover:text-black transition-colors">{t('footer.shipping')}</Link></li>
-              <li><Link href="/contact" className="hover:text-black transition-colors">{t('footer.contact')}</Link></li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h3 className="font-bold text-gray-900 mb-4">{t('footer.stayUpdated')}</h3>
-            <p className="text-sm text-gray-500 mb-4">{t('footer.newsletter')}</p>
-            <form className="flex flex-col gap-2">
+            <form className="mt-6 flex w-full max-w-md items-center rounded-full border border-zinc-300 bg-transparent px-4 py-2">
               <input
                 type="email"
-                placeholder={t('footer.emailPlaceholder')}
-                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 text-sm"
+                placeholder={t('footer.emailPlaceholder') || 'Email address'}
+                className="h-8 w-full bg-transparent text-sm text-zinc-800 placeholder:text-zinc-500 focus:outline-none"
               />
-              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
-                {t('footer.subscribe')}
+              <button
+                type="submit"
+                aria-label="Kirim email"
+                title="Kirim email"
+                className="rounded-full p-1.5 text-zinc-700 transition-colors hover:bg-zinc-300/70 hover:text-zinc-900"
+              >
+                <span className="text-base">→</span>
               </button>
             </form>
-          </div>
+
+            <div className="mt-8 flex items-center gap-3">
+              {socialLinks.instagram && (
+                <a
+                  href={socialLinks.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Instagram"
+                  title="Instagram"
+                  className="rounded-full border border-zinc-300 p-2 text-zinc-500 transition-colors hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+              )}
+              {socialLinks.twitter && (
+                <a
+                  href={socialLinks.twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Twitter"
+                  title="Twitter"
+                  className="rounded-full border border-zinc-300 p-2 text-zinc-500 transition-colors hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  <Twitter className="h-4 w-4" />
+                </a>
+              )}
+              {socialLinks.facebook && (
+                <a
+                  href={socialLinks.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                  title="Facebook"
+                  className="rounded-full border border-zinc-300 p-2 text-zinc-500 transition-colors hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+              )}
+              {socialLinks.youtube && (
+                <a
+                  href={socialLinks.youtube}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="YouTube"
+                  title="YouTube"
+                  className="rounded-full border border-zinc-300 p-2 text-zinc-500 transition-colors hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  <Youtube className="h-4 w-4" />
+                </a>
+              )}
+            </div>
+          </section>
+
+          <section className="grid grid-cols-1 gap-10 sm:grid-cols-2">
+            <div>
+              <h3 className="text-3xl font-black tracking-tight text-zinc-900">Link</h3>
+              <ul className="mt-4 space-y-3 text-sm text-zinc-600">
+                <li><Link href="/products" className="transition-colors hover:text-zinc-900">{t('footer.allProducts')}</Link></li>
+                <li><Link href="/products?sort=newest" className="transition-colors hover:text-zinc-900">{t('footer.newArrivals')}</Link></li>
+                <li><Link href="/categories" className="transition-colors hover:text-zinc-900">{t('footer.categories')}</Link></li>
+                <li><Link href="/checkout" className="transition-colors hover:text-zinc-900">Payment via QRIS</Link></li>
+                <li><Link href="/history" className="transition-colors hover:text-zinc-900">Payment Inquiries</Link></li>
+                <li><Link href="/about" className="transition-colors hover:text-zinc-900">Delivery</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-zinc-900">Legal</h3>
+              <ul className="mt-4 space-y-3 text-sm text-zinc-600">
+                <li><Link href="/privacy" className="transition-colors hover:text-zinc-900">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="transition-colors hover:text-zinc-900">Terms and Policies</Link></li>
+                <li><Link href="/about" className="transition-colors hover:text-zinc-900">Legal & Support</Link></li>
+              </ul>
+            </div>
+          </section>
         </div>
 
-        <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-400">
-            &copy; {new Date().getFullYear()} FathStore. {t('footer.rights')}
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-zinc-300 pt-6 text-xs text-zinc-500 md:flex-row md:items-center">
+          <p>
+            &copy; {new Date().getFullYear()} Exortive
           </p>
-          <div className="flex gap-6 text-xs text-gray-400">
-            <Link href="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-black transition-colors">Terms of Service</Link>
-          </div>
+          <Link href="/terms" className="transition-colors hover:text-zinc-800">Terms and Policies</Link>
         </div>
       </div>
     </footer>

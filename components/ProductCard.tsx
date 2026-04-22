@@ -47,9 +47,19 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Quick Add Button */}
         <button
+          type="button"
+          aria-label={`Tambah ${product.title} ke keranjang`}
+          title={`Tambah ${product.title} ke keranjang`}
           onClick={(e) => {
             e.preventDefault()
-            addToCart(product)
+            addToCart({
+              productId: product.id,
+              title: product.title,
+              slug: product.slug || product.id,
+              price: product.price || 0,
+              quantity: 1,
+              thumbnailUrl: product.thumbnail?.url || null,
+            })
           }}
           className="absolute bottom-4 right-4 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-primary hover:text-white"
         >

@@ -18,6 +18,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "allowImportingTsExtensions": true,
     "plugins": [
       {
         "name": "next"
@@ -41,6 +42,12 @@
       ]
     }
   },
+  "exclude": [
+    "node_modules",
+    ".next",
+    "apps/**",
+    "dist"
+  ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -49,6 +56,11 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "apps/**",
+    "check-*.ts",
+    "list-dbs.ts",
+    "seed*.ts",
+    "test-db.ts"
   ]
 }

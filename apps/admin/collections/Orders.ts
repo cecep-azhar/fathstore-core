@@ -14,14 +14,14 @@ export const Orders: CollectionConfig = {
     create: isAuthenticated,
     read: ({ req: { user } }) => {
       if (!user) return false
-      if (user.role === 'admin' || user.role === 'merchant') return true
+      if (user.role === 'admin') return true
       return {
         customer: { equals: user.id },
       }
     },
     update: ({ req: { user } }) => {
       if (!user) return false
-      if (user.role === 'admin' || user.role === 'merchant') return true
+      if (user.role === 'admin') return true
       return {
         customer: { equals: user.id },
       }

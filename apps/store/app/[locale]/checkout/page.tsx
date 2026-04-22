@@ -53,6 +53,18 @@ export default function CheckoutPage() {
     }
   }, [isAddingAddress])
 
+  // Reset locations when country changes
+  useEffect(() => {
+    setSelectedProvinceId('')
+    setSelectedCityId('')
+    setSelectedDistrictId('')
+    setProvinces([])
+    setCities([])
+    setDistricts([])
+    setSubdistricts([])
+    setNewAddress(p => ({ ...p, province: '', city: '', district: '', subdistrict: '', postalCode: '' }))
+  }, [newAddress.country])
+
   // Fetch cities when province changes
   useEffect(() => {
     if (selectedProvinceId) {
@@ -95,14 +107,12 @@ export default function CheckoutPage() {
     setNewAddress(p => ({ ...p, subdistrict: '', postalCode: '' }))
   }, [selectedDistrictId])
 
-  // Redirect if not logged in or empty cart
+  // Redirect if empty cart (allow guests, but they need to login to checkout)
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push(process.env.NEXT_PUBLIC_MEMBER_URL ? `${process.env.NEXT_PUBLIC_MEMBER_URL}/login` : '/login')
-    } else if (!authLoading && user && items.length === 0) {
+    if (!authLoading && items.length === 0) {
       router.push('/cart')
     }
-  }, [user, items, authLoading, router])
+  }, [items, authLoading, router])
 
   // Select default address if available
   useEffect(() => {

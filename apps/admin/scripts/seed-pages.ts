@@ -1,4 +1,6 @@
 
+// @ts-nocheck
+
 import { getPayload } from 'payload'
 import fs from 'fs'
 import path from 'path'

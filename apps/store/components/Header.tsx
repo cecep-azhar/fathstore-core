@@ -59,6 +59,9 @@ export function Header() {
             {/* Actions */}
             <div className="flex items-center gap-4">
               <button 
+                type="button"
+                aria-label="Cari produk"
+                title="Cari produk"
                 onClick={() => setIsSearchOpen(true)}
                 className="p-2 text-gray-600 hover:text-black transition-colors dark:text-gray-400 dark:hover:text-white"
               >
@@ -82,6 +85,9 @@ export function Header() {
                 <User className="w-5 h-5" />
               </Link>
               <button
+                type="button"
+                aria-label="Buka menu"
+                title="Buka menu"
                 className="md:hidden p-2 text-gray-600 hover:text-black transition-colors dark:text-gray-400 dark:hover:text-white"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
@@ -103,6 +109,9 @@ export function Header() {
                  />
              </form>
              <button 
+               type="button"
+               aria-label="Tutup pencarian"
+               title="Tutup pencarian"
                 onClick={() => setIsSearchOpen(false)}
                 className="ml-4 p-2 text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white"
              >

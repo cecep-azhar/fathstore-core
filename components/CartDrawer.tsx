@@ -30,6 +30,8 @@ export function CartDrawer() {
               <button
                 onClick={() => setIsOpen(false)}
                 className="rounded-full p-2 hover:bg-secondary transition-colors"
+                aria-label="Tutup keranjang"
+                title="Tutup keranjang"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -56,11 +58,11 @@ export function CartDrawer() {
               ) : (
                 <div className="space-y-6">
                   {cart.map((item) => (
-                    <div key={item.id} className="flex gap-4">
+                    <div key={item.cartId} className="flex gap-4">
                       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-secondary">
-                        {item.thumbnail ? (
+                        {item.thumbnailUrl ? (
                           <Image
-                            src={item.thumbnail}
+                            src={item.thumbnailUrl}
                             alt={item.title}
                             width={96}
                             height={96}
@@ -85,7 +87,10 @@ export function CartDrawer() {
                         <div className="mt-auto flex items-center justify-between pt-2">
                           <div className="flex items-center gap-1 border rounded-full p-1 bg-secondary/50">
                             <button
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              type="button"
+                              aria-label={`Kurangi jumlah ${item.title}`}
+                              title={`Kurangi jumlah ${item.title}`}
+                              onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
                               className="p-1 hover:text-primary transition-colors"
                             >
                               <Minus className="h-4 w-4" />
@@ -94,7 +99,10 @@ export function CartDrawer() {
                               {item.quantity}
                             </span>
                             <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              type="button"
+                              aria-label={`Tambah jumlah ${item.title}`}
+                              title={`Tambah jumlah ${item.title}`}
+                              onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
                               className="p-1 hover:text-primary transition-colors"
                             >
                               <Plus className="h-4 w-4" />
@@ -102,7 +110,10 @@ export function CartDrawer() {
                           </div>
 
                           <button
-                            onClick={() => removeFromCart(item.id)}
+                            type="button"
+                            aria-label={`Hapus ${item.title}`}
+                            title={`Hapus ${item.title}`}
+                            onClick={() => removeFromCart(item.cartId)}
                             className="text-muted-foreground hover:text-destructive transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />

@@ -130,9 +130,6 @@ export interface Config {
     settings: SettingsSelect<false> | SettingsSelect<true>;
   };
   locale: null;
-  widgets: {
-    collections: CollectionsWidget;
-  };
   user: User;
   jobs: {
     tasks: unknown;
@@ -574,16 +571,47 @@ export interface Order {
   id: number;
   orderNumber: string;
   customer: number | User;
+  customerEmail?: string | null;
   items?:
     | {
         product?: (number | null) | Product;
         productTitle: string;
         quantity: number;
         unitPrice: number;
+        totalPrice: number;
         id?: string | null;
       }[]
     | null;
+  checkoutCurrency?: ('IDR' | 'USD' | 'SGD') | null;
+  exchangeRateAtCheckout?: number | null;
+  subtotal: number;
+  discountAmount?: number | null;
+  shippingCost?: number | null;
+  tax?: number | null;
   total: number;
+  paymentStatus?: ('pending' | 'payment_review' | 'paid' | 'failed' | 'refunded') | null;
+  fulfillmentStatus?: ('unfulfilled' | 'processing' | 'shipped' | 'completed' | 'complaint') | null;
+  paymentMethod?: ('qris' | 'bank_transfer' | 'xendit' | 'cod' | 'other') | null;
+  paymentData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  shippingAddress?: {
+    fullName?: string | null;
+    phone?: string | null;
+    province?: string | null;
+    city?: string | null;
+    district?: string | null;
+    subdistrict?: string | null;
+    postalCode?: string | null;
+    street?: string | null;
+    country?: string | null;
+  };
   status?: ('pending' | 'paid' | 'completed') | null;
   updatedAt: string;
   createdAt: string;
@@ -599,6 +627,7 @@ export interface Review {
   rating: number;
   title: string;
   body: string;
+  approved?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1144,6 +1173,7 @@ export interface SubdistrictsSelect<T extends boolean = true> {
 export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   customer?: T;
+  customerEmail?: T;
   items?:
     | T
     | {
@@ -1151,9 +1181,33 @@ export interface OrdersSelect<T extends boolean = true> {
         productTitle?: T;
         quantity?: T;
         unitPrice?: T;
+        totalPrice?: T;
         id?: T;
       };
+  checkoutCurrency?: T;
+  exchangeRateAtCheckout?: T;
+  subtotal?: T;
+  discountAmount?: T;
+  shippingCost?: T;
+  tax?: T;
   total?: T;
+  paymentStatus?: T;
+  fulfillmentStatus?: T;
+  paymentMethod?: T;
+  paymentData?: T;
+  shippingAddress?:
+    | T
+    | {
+        fullName?: T;
+        phone?: T;
+        province?: T;
+        city?: T;
+        district?: T;
+        subdistrict?: T;
+        postalCode?: T;
+        street?: T;
+        country?: T;
+      };
   status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1168,6 +1222,7 @@ export interface ReviewsSelect<T extends boolean = true> {
   rating?: T;
   title?: T;
   body?: T;
+  approved?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1310,16 +1365,6 @@ export interface SettingsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "collections_widget".
- */
-export interface CollectionsWidget {
-  data?: {
-    [k: string]: unknown;
-  };
-  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

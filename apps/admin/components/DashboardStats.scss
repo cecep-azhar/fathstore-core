@@ -1,6 +1,6 @@
 .dashboard-stats {
   padding: 24px;
-  max-width: 1200px;
+  max-width: 1400px;
 
   &__loading,
   &__error {
@@ -56,7 +56,7 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
     margin-bottom: 32px;
   }
@@ -92,7 +92,7 @@
   }
 
   &__card-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--theme-elevation-500);
@@ -106,16 +106,103 @@
     line-height: 1.2;
   }
 
+  // Card color variants
   &__card--sales {
     border-left: 4px solid #38a169;
+    .dashboard-stats__card-icon { filter: hue-rotate(80deg); }
   }
 
   &__card--orders {
     border-left: 4px solid #3182ce;
+    .dashboard-stats__card-icon { filter: hue-rotate(160deg); }
   }
 
   &__card--avg {
     border-left: 4px solid #d69e2e;
+    .dashboard-stats__card-icon { filter: hue-rotate(280deg); }
+  }
+
+  &__card--customers {
+    border-left: 4px solid #805ad5;
+    .dashboard-stats__card-icon { filter: hue-rotate(200deg); }
+  }
+
+  &__card--products {
+    border-left: 4px solid #dd6b20;
+    .dashboard-stats__card-icon { filter: hue-rotate(320deg); }
+  }
+
+  &__card--pending {
+    border-left: 4px solid #d69e2e;
+  }
+
+  &__card--warning {
+    border-left: 4px solid #e53e3e;
+    background: #fff5f5;
+    .dashboard-stats__card-icon { filter: hue-rotate(0deg); }
+  }
+
+  // ── Sales Chart ─────────────────────────────────────
+
+  &__chart {
+    background: var(--theme-elevation-50);
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+
+    h3 {
+      margin: 0 0 20px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--theme-elevation-1000);
+    }
+  }
+
+  &__chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 180px;
+    gap: 12px;
+    padding-top: 20px;
+  }
+
+  &__chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__chart-bar-fill {
+    width: 100%;
+    max-width: 60px;
+    background: linear-gradient(180deg, #38a169 0%, #68d391 100%);
+    border-radius: 6px 6px 0 0;
+    min-height: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+    transition: height 0.3s ease;
+    position: relative;
+  }
+
+  &__chart-value {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  &__chart-label {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--theme-elevation-500);
+    font-weight: 500;
   }
 
   // ── Recent Orders Table ──────────────────────────────
@@ -203,6 +290,21 @@
   }
 
   .badge--refunded {
+    background: #e9d8fd;
+    color: #44337a;
+  }
+
+  .badge--completed {
+    background: #c6f6d5;
+    color: #22543d;
+  }
+
+  .badge--processing {
+    background: #bee3f8;
+    color: #2a4365;
+  }
+
+  .badge--shipped {
     background: #e9d8fd;
     color: #44337a;
   }

@@ -1,0 +1,69 @@
+/* Custom CSS to fix PayloadCMS Admin Panel styling issues */
+
+/* Reset styles that might conflict with PayloadCMS */
+#__next,
+[data-theme] {
+  --theme-elevation-0: #0c0c0c;
+  --theme-elevation-50: #1a1a1a;
+  --theme-elevation-100: #262626;
+  --theme-elevation-150: #2e2e2e;
+  --theme-elevation-200: #363636;
+  --theme-elevation-250: #3e3e3e;
+  --theme-elevation-300: #464646;
+  --theme-elevation-350: #4e4e4e;
+  --theme-elevation-400: #565656;
+  --theme-elevation-450: #5e5e5e;
+  --theme-elevation-500: #666666;
+  --theme-elevation-550: #757575;
+  --theme-elevation-600: #858585;
+  --theme-elevation-650: #949494;
+  --theme-elevation-700: #a3a3a3;
+  --theme-elevation-750: #b2b2b2;
+  --theme-elevation-800: #c1c1c1;
+  --theme-elevation-850: #d1d1d1;
+  --theme-elevation-900: #e0e0e0;
+  --theme-elevation-950: #efefef;
+  --theme-elevation-1000: #ffffff;
+}
+
+/* Ensure text is visible */
+.payload-admin label,
+.payload-admin h1,
+.payload-admin h2,
+.payload-admin h3,
+.payload-admin h4,
+.payload-admin h5,
+.payload-admin h6,
+.payload-admin p,
+.payload-admin span,
+.payload-admin div {
+  color: inherit;
+}
+
+/* Fix input fields */
+.payload-admin input,
+.payload-admin textarea,
+.payload-admin select {
+  background-color: var(--theme-elevation-100) !important;
+  color: var(--theme-elevation-1000) !important;
+  border-color: var(--theme-elevation-300) !important;
+}
+
+.payload-admin input::placeholder,
+.payload-admin textarea::placeholder {
+  color: var(--theme-elevation-600) !important;
+}
+
+/* Fix buttons */
+.payload-admin button {
+  color: inherit;
+}
+
+/* Ensure proper contrast for form labels */
+.field-type label {
+  color: var(--theme-elevation-800) !important;
+}
+
+.field-description {
+  color: var(--theme-elevation-600) !important;
+}

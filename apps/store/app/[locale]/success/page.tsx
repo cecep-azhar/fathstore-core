@@ -3,15 +3,46 @@
 import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle, ArrowRight, Building2, CreditCard, QrCode } from 'lucide-react'
+import { CheckCircle, ArrowRight, Building2, CreditCard, QrCode, Loader2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 function SuccessContent() {
   const searchParams = useSearchParams()
   const orderId = searchParams.get('orderId')
   const method = searchParams.get('method') || ''
+  const [qrCode, setQrCode] = useState<string | null>(null)
+  const [isLoadingQR, setIsLoadingQR] = useState(false)
+  const isQris = method.toLowerCase().includes('qris')
+
+  useEffect(() => {
+    if (isQris && orderId) {
+      setIsLoadingQR(true)
+      // Generate QRIS code dynamically
+      const generateQRISCode = async () => {
+        try {
+          // Dynamically import qrcode library at the root level
+          const { default: QRCode } = await import('qrcode')
+          const qrisString = `00020101021226FATHSTORE52045812530336054100000005802ID5913${orderId}6304`
+          const code = await QRCode.toDataURL(qrisString, {
+            width: 300,
+            margin: 2,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF',
+            },
+          })
+          setQrCode(code)
+        } catch (err) {
+          console.error('Failed to generate QRIS code:', err)
+        } finally {
+          setIsLoadingQR(false)
+        }
+      }
+      generateQRISCode()
+    }
+  }, [orderId, isQris])
 
   const isBankTransfer = method.toLowerCase().includes('bank') || method.toLowerCase().includes('transfer')
-  const isQris = method.toLowerCase().includes('qris')
   const isCard = method.toLowerCase().includes('card') || method.toLowerCase().includes('credit')
 
   return (
@@ -46,9 +77,20 @@ function SuccessContent() {
             </p>
           )}
           {isQris && (
-            <p className="text-xs text-emerald-700 dark:text-emerald-400">
-              Scan the QRIS code from your Member Dashboard to complete payment.
-            </p>
+            <div className="space-y-3">
+              <p className="text-xs text-emerald-700 dark:text-emerald-400">
+                Scan the QRIS code below with any QRIS-compatible app to complete payment:
+              </p>
+              {isLoadingQR ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                </div>
+              ) : qrCode ? (
+                <div className="bg-white p-4 rounded-lg flex justify-center">
+                  <img src={qrCode} alt="QRIS Payment Code" className="w-48 h-48" />
+                </div>
+              ) : null}
+            </div>
           )}
           {isCard && (
             <p className="text-xs text-emerald-700 dark:text-emerald-400">
