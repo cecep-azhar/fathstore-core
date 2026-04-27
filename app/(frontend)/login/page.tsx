@@ -26,10 +26,10 @@ export default function LoginPage() {
         router.push('/dashboard')
         router.refresh()
       } else {
-        setError('Email atau kata sandi salah')
+        setError('Invalid email or password')
       }
     } catch (err) {
-      setError('Terjadi kesalahan. Silakan coba lagi.')
+      setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -47,8 +47,8 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Member Area</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight">Masuk Akun {BRAND.name}</h1>
-            <p className="mt-3 text-sm text-white/80">Akses dashboard, histori pembelian, dan materi Anda.</p>
+            <h1 className="mt-3 text-4xl font-black tracking-tight">Sign in to {BRAND.name}</h1>
+            <p className="mt-3 text-sm text-white/80">Access your dashboard, order history, and profile.</p>
           </div>
         </div>
 
@@ -75,13 +75,13 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-xl border border-zinc-300 bg-white py-3 pl-10 pr-3 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-400/25"
-                  placeholder="nama@email.com"
+                  placeholder="name@email.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Kata Sandi</label>
+              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Password</label>
               <div className="group relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Lock className="h-5 w-5 text-zinc-400 transition-colors group-focus-within:text-zinc-700" />
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Masuk Sekarang
+                  Sign In
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
@@ -114,9 +114,9 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-8 text-sm text-zinc-600">
-            Belum punya akun?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="font-semibold text-zinc-900 underline-offset-4 hover:underline">
-              Daftar Gratis
+              Sign Up Free
             </Link>
           </p>
         </div>

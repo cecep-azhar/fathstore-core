@@ -104,6 +104,26 @@ Aplikasi sudah dicek secara menyeluruh dan tidak ditemukan bug kritis lainnya:
 
 ---
 
+## 4. Branding Update - EXORTIVE
+
+**File:** `config/brand.ts`
+
+**Perubahan:**
+- Nama brand: `EXORTIVE`
+- Domain: `exortive.com`
+- Tagline: `Elevate Your Style`
+- Deskripsi: English branding
+- Produk seed: Tas kerja, tas casual, dompet, aksesoris
+- Sliders: English content
+
+**Pages Updated:**
+- `app/(frontend)/about/page.tsx` - English content
+- `app/(frontend)/login/page.tsx` - English content
+- `app/(frontend)/register/page.tsx` - English content
+- `app/(frontend)/page.tsx` - English content
+
+---
+
 ## 3. Admin Page - Payload Version Mismatch & Config
 
 **Masalah:**

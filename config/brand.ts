@@ -1,14 +1,14 @@
 /**
  * ============================================================
- * KONFIGURASI BRANDING FATHSTORE
+ * KONFIGURASI BRANDING EXORTIVE
  * ============================================================
- * 
+ *
  * File ini adalah SATU-SATUNYA tempat untuk mengubah semua
  * identitas dan konfigurasi toko Anda.
  *
  * Cara penggunaan:
  *   import { BRAND } from '@/config/brand'
- *   console.log(BRAND.name) // "FathStore"
+ *   console.log(BRAND.name) // "EXORTIVE"
  *
  * Setelah mengubah nilai di sini, restart server dev
  * agar perubahan diterapkan ke seluruh aplikasi.
@@ -18,33 +18,33 @@
 export const BRAND = {
   // ─── Identitas Toko ─────────────────────────────────────
   /** Nama toko yang ditampilkan di seluruh UI */
-  name: 'FathStore',
+  name: 'EXORTIVE',
   /** Nama domain untuk keperluan email dan copyright */
-  domain: 'fathstore.com',
+  domain: 'exortive.com',
   /** Tagline singkat yang muncul di hero dan footer */
-  tagline: 'Produk berkualitas untuk gaya hidup Anda',
+  tagline: 'Elevate Your Style',
   /** Deskripsi lengkap untuk meta SEO */
-  description: 'Toko online premium dengan produk pilihan berkualitas tinggi.',
+  description: 'Premium lifestyle products curated for the modern individual.',
   /** Email kontak utama toko */
-  email: 'hello@fathstore.com',
+  email: 'hello@exortive.com',
   /** Nomor WhatsApp untuk customer service (format internasional tanpa +) */
   whatsapp: '6281234567890',
   /** Lokasi kota/kantor pusat */
-  location: 'Bandung, Indonesia',
+  location: 'Jakarta, Indonesia',
 
   // ─── Akun Bank untuk Pembayaran ─────────────────────────
   banks: [
-    { name: 'Bank BCA', number: '1234567890', holder: 'FathStore' },
-    { name: 'Bank Mandiri', number: '0987654321', holder: 'FathStore' },
+    { name: 'Bank BCA', number: '1234567890', holder: 'EXORTIVE' },
+    { name: 'Bank Mandiri', number: '0987654321', holder: 'EXORTIVE' },
   ],
 
   // ─── Tautan Media Sosial ─────────────────────────────────
   social: {
-    instagram: 'https://instagram.com/fathstore',
-    twitter: 'https://twitter.com/fathstore',
-    facebook: 'https://facebook.com/fathstore',
-    youtube: 'https://youtube.com/fathstore',
-    tiktok: '',
+    instagram: 'https://instagram.com/exortive',
+    twitter: 'https://twitter.com/exortive',
+    facebook: 'https://facebook.com/exortive',
+    youtube: 'https://youtube.com/exortive',
+    tiktok: 'https://tiktok.com/@exortive',
   },
 
   // ─── Warna Tema ─────────────────────────────────────────
@@ -56,76 +56,76 @@ export const BRAND = {
   // ─── Data Default Seeder ─────────────────────────────────
   /** Kategori produk awal yang akan dibuat saat seeding */
   seedCategories: [
-    { name: 'Pakaian Pria', slug: 'pakaian-pria', description: 'Koleksi pakaian untuk pria' },
-    { name: 'Pakaian Wanita', slug: 'pakaian-wanita', description: 'Koleksi pakaian untuk wanita' },
-    { name: 'Sepatu', slug: 'sepatu', description: 'Koleksi sepatu premium' },
+    { name: 'Tas Kerja', slug: 'tas-kerja', description: 'Koleksi tas kerja premium untuk profesional' },
+    { name: 'Tas Casual', slug: 'tas-casual', description: 'Tas untuk gaya casual sehari-hari' },
+    { name: 'Dompet', slug: 'dompet', description: 'Koleksi dompet eksklusif' },
     { name: 'Aksesoris', slug: 'aksesoris', description: 'Aksesoris pelengkap penampilan' },
   ],
 
   /** Produk contoh yang akan dibuat saat seeding */
   seedProducts: [
     {
-      title: 'Kaos Premium Hitam',
-      slug: 'kaos-premium-hitam',
-      price: 149000,
-      compareAtPrice: 199000,
-      stock: 50,
-      status: 'active' as const,
-      featured: true,
-      category: 'pakaian-pria',
-    },
-    {
-      title: 'Kemeja Flannel Kotak',
-      slug: 'kemeja-flannel-kotak',
-      price: 299000,
-      compareAtPrice: 350000,
-      stock: 30,
-      status: 'active' as const,
-      featured: true,
-      category: 'pakaian-pria',
-    },
-    {
-      title: 'Dress Casual Wanita',
-      slug: 'dress-casual-wanita',
-      price: 259000,
-      compareAtPrice: 320000,
+      title: 'Briefcase Executive Black',
+      slug: 'briefcase-executive-black',
+      price: 1490000,
+      compareAtPrice: 1990000,
       stock: 25,
       status: 'active' as const,
       featured: true,
-      category: 'pakaian-wanita',
+      category: 'tas-kerja',
     },
     {
-      title: 'Sepatu Sneakers Minimalis',
-      slug: 'sepatu-sneakers-minimalis',
-      price: 450000,
-      compareAtPrice: 550000,
-      stock: 15,
+      title: 'Messenger Bag Classic',
+      slug: 'messenger-bag-classic',
+      price: 899000,
+      compareAtPrice: 1200000,
+      stock: 30,
+      status: 'active' as const,
+      featured: true,
+      category: 'tas-kerja',
+    },
+    {
+      title: 'Sling Bag Urban',
+      slug: 'sling-bag-urban',
+      price: 599000,
+      compareAtPrice: 750000,
+      stock: 40,
+      status: 'active' as const,
+      featured: true,
+      category: 'tas-casual',
+    },
+    {
+      title: 'Wallet Minimalist Leather',
+      slug: 'wallet-minimalist-leather',
+      price: 350000,
+      compareAtPrice: 450000,
+      stock: 50,
       status: 'active' as const,
       featured: false,
-      category: 'sepatu',
+      category: 'dompet',
     },
   ],
 
   /** Hero slider yang akan ditampilkan di homepage */
   seedSliders: [
     {
-      title: 'Koleksi Terbaru Telah Hadir',
-      subtitle: 'Temukan produk premium pilihan kami untuk melengkapi penampilan Anda',
-      buttonText: 'Belanja Sekarang',
+      title: 'We Exortive Passion',
+      subtitle: 'Premium bags and accessories crafted for the modern professional',
+      buttonText: 'Shop Now',
       buttonLink: '/products',
       order: 1,
     },
     {
-      title: 'Gratis Ongkir Seluruh Indonesia',
-      subtitle: 'Nikmati pengiriman gratis untuk setiap pembelian di atas Rp 300.000',
-      buttonText: 'Lihat Produk',
+      title: 'Elevate Your Everyday',
+      subtitle: 'Discover our curated collection of minimalist luxury',
+      buttonText: 'Explore Collection',
       buttonLink: '/products',
       order: 2,
     },
     {
-      title: 'Kualitas Terjamin, Harga Terjangkau',
-      subtitle: 'Kami berkomitmen menghadirkan produk berkualitas dengan harga yang bersahabat',
-      buttonText: 'Kenali Kami',
+      title: 'Quality That Lasts',
+      subtitle: 'Handcrafted with premium materials for timeless style',
+      buttonText: 'Learn More',
       buttonLink: '/about',
       order: 3,
     },

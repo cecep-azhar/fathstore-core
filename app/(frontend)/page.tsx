@@ -30,10 +30,10 @@ export default async function HomePage() {
         <div className="mb-8 flex items-end justify-between">
           <div>
             <h2 className="text-3xl font-black tracking-tight text-zinc-900">Best picks</h2>
-            <p className="mt-2 text-sm text-zinc-600">Pilihan tas kerja yang fungsional untuk aktivitas harian.</p>
+            <p className="mt-2 text-sm text-zinc-600">Curated work bags and accessories for your daily activities.</p>
           </div>
           <Link href="/products" className="hidden items-center gap-2 text-sm font-semibold text-zinc-700 transition-colors hover:text-zinc-900 sm:inline-flex">
-            Lihat semua
+            View all
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -46,7 +46,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-10 text-center text-sm text-zinc-500">
-            Produk belum tersedia.
+            Products coming soon.
           </p>
         )}
       </section>

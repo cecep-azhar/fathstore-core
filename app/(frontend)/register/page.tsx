@@ -22,12 +22,12 @@ export default function RegisterPage() {
     setError(null)
 
     if (password !== confirmPassword) {
-      setError('Kata sandi tidak cocok')
+      setError('Passwords do not match')
       return
     }
 
     if (password.length < 8) {
-      setError('Kata sandi harus minimal 8 karakter')
+      setError('Password must be at least 8 characters')
       return
     }
 
@@ -39,10 +39,10 @@ export default function RegisterPage() {
         router.push('/dashboard')
         router.refresh()
       } else {
-        setError('Pendaftaran gagal. Email mungkin sudah digunakan.')
+        setError('Registration failed. Email may already be in use.')
       }
     } catch (err) {
-      setError('Terjadi kesalahan. Silakan coba lagi.')
+      setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -60,8 +60,8 @@ export default function RegisterPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Create account</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight">Gabung Member {BRAND.name}</h1>
-            <p className="mt-3 text-sm text-white/80">Buat akun untuk lanjut ke dashboard, histori pesanan, dan profil Anda.</p>
+            <h1 className="mt-3 text-4xl font-black tracking-tight">Join {BRAND.name} Today</h1>
+            <p className="mt-3 text-sm text-white/80">Create an account to access your dashboard, order history, and profile.</p>
           </div>
         </div>
 
@@ -77,7 +77,7 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Nama Lengkap</label>
+              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Full Name</label>
               <div className="group relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <User className="h-5 w-5 text-zinc-400 transition-colors group-focus-within:text-zinc-700" />
@@ -88,7 +88,7 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="block w-full rounded-xl border border-zinc-300 bg-white py-3 pl-10 pr-3 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-400/25"
-                  placeholder="Ahmad Wijaya"
+                  placeholder="John Doe"
                 />
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Kata Sandi</label>
+              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Password</label>
               <div className="group relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Lock className="h-5 w-5 text-zinc-400 transition-colors group-focus-within:text-zinc-700" />
@@ -129,7 +129,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Konfirmasi Kata Sandi</label>
+              <label className="mb-1.5 block text-sm font-medium text-zinc-700">Confirm Password</label>
               <div className="group relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Lock className="h-5 w-5 text-zinc-400 transition-colors group-focus-within:text-zinc-700" />
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Buat Akun Sekarang
+                  Create Account
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
@@ -163,9 +163,9 @@ export default function RegisterPage() {
           </form>
 
           <p className="mt-8 text-sm text-zinc-600">
-            Sudah punya akun?{' '}
+            Already have an account?{' '}
             <Link href="/login" className="font-semibold text-zinc-900 underline-offset-4 hover:underline">
-              Masuk
+              Sign In
             </Link>
           </p>
         </div>
