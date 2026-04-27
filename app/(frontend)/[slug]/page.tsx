@@ -81,7 +81,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Halaman Belum Dibuat di Admin</h2>
             <p className="text-gray-500 mb-8 max-w-md mx-auto leading-relaxed">
-                Anda melihat halaman dummy karena CMS belum memiliki data untuk URL slug <code className="bg-gray-100 px-2 py-1 rounded text-red-500 font-mono">/{params.slug}</code>.
+                Anda melihat halaman dummy karena CMS belum memiliki data untuk URL slug <code className="bg-gray-100 px-2 py-1 rounded text-red-500 font-mono">/{slug}</code>.
                 Untuk mengubah teks ini, silakan buat halaman baru di halaman Admin Area.
             </p>
             <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-xl flex items-start text-left gap-3 w-full border border-blue-100">
@@ -91,7 +91,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                    <ol className="list-decimal pl-4 space-y-1 text-blue-700/80">
                        <li>Login ke <a href="/admin" className="underline font-semibold hover:text-blue-900">Admin Area</a>.</li>
                        <li>Buka menu <strong>Pages</strong> (Halaman).</li>
-                       <li>Buat Halaman Baru dengan slug: <strong className="font-mono bg-blue-100 px-1">{params.slug}</strong></li>
+                       <li>Buat Halaman Baru dengan slug: <strong className="font-mono bg-blue-100 px-1">{slug}</strong></li>
                        <li>Isi layout (Hero & Text) lalu pilih Publish.</li>
                    </ol>
                 </div>

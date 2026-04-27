@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getProductBySlug, getProductReviews } from '@/lib/store-payload'
-import { getMediaUrl, formatRupiah } from '@/lib/store-utils'
+import { getMediaUrl } from '@/lib/store-utils'
 import { StoreProductActions } from '@/components/store/StoreProductActions'
 import { RichTextRenderer } from '@/components/store/RichTextRenderer'
 import { Star, ChevronRight, User } from 'lucide-react'
@@ -28,20 +28,19 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params
-  
-  try {
-    const product = await getProductBySlug(slug)
 
-    if (!product) {
-      notFound()
-    }
+  const product = await getProductBySlug(slug)
 
-    const reviews = await getProductReviews(product.id)
-    const thumbnailUrl = getMediaUrl(product.thumbnail)
+  if (!product) {
+    notFound()
+  }
 
-    const avgRating = reviews?.docs?.length > 0
-      ? reviews.docs.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.docs.length
-      : 0
+  const reviews = await getProductReviews(product.id)
+  const thumbnailUrl = getMediaUrl(product.thumbnail)
+
+  const avgRating = reviews?.docs?.length > 0
+    ? reviews.docs.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.docs.length
+    : 0
 
   return (
     <div className="bg-white min-h-screen">
@@ -66,19 +65,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                   src={thumbnailUrl}
                   alt={product.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  onError={(e: any) => {
-                    e.target.src = '/logo.svg'
-                  }}
                 />
               ) : (
-                <img
-                  src="/logo.svg"
-                  alt="FathStore Logo"
-                  className="w-full h-full object-contain p-12 bg-gray-50"
-                  onError={(e: any) => {
-                    e.target.style.display = 'none'
-                  }}
-                />
+                <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                  <span className="text-gray-400">Tidak ada gambar</span>
+                </div>
               )}
             </div>
           </div>
@@ -95,7 +86,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 ))}
               </div>
               <span className="text-sm font-medium text-gray-500">
-                {avgRating.toFixed(1)} ({reviews.totalDocs} ulasan)
+                {avgRating.toFixed(1)} ({reviews?.totalDocs || 0} ulasan)
               </span>
             </div>
 
@@ -129,10 +120,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         <section className="mt-24 border-t border-gray-100 pt-16 max-w-4xl">
           <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
             Ulasan Pelanggan
-            <span className="text-sm font-normal text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{reviews.totalDocs}</span>
+            <span className="text-sm font-normal text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{reviews?.totalDocs || 0}</span>
           </h2>
 
-          {reviews.docs.length > 0 ? (
+          {reviews?.docs?.length > 0 ? (
             <div className="space-y-8">
               {reviews.docs.map((review: any) => {
                 const authorName = typeof review.author === 'object' ? (review.author as any).name : 'Anonim'
@@ -171,9 +162,5 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </section>
       </div>
     </div>
-    )
-  } catch (error) {
-    console.error('Error loading product:', error)
-    notFound()
-  }
+  )
 }

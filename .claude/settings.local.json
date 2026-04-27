@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm typecheck *)"
+      "Bash(pnpm typecheck *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000/admin)",
+      "Bash(rm -rf node_modules/.cache)",
+      "Bash(rm -rf .next)",
+      "Bash(npm install *)",
+      "Bash(rm -rf node_modules)",
+      "Bash(rm package-lock.json)"
     ]
   }
 }
