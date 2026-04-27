@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { BRAND } from '@/config/brand'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -40,13 +41,13 @@ export default function LoginPage() {
         <div className="relative hidden lg:block">
           <img
             src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80"
-            alt="Exortive member"
+            alt={`${BRAND.name} member`}
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Member Area</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight">Masuk Akun Exortive</h1>
+            <h1 className="mt-3 text-4xl font-black tracking-tight">Masuk Akun {BRAND.name}</h1>
             <p className="mt-3 text-sm text-white/80">Akses dashboard, histori pembelian, dan materi Anda.</p>
           </div>
         </div>

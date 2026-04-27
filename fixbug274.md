@@ -101,3 +101,66 @@ Aplikasi sudah dicek secara menyeluruh dan tidak ditemukan bug kritis lainnya:
 ## Update 27 April 2026 - Bug #2 Fixed
 
 - Halaman produk sudah diperbaiki dan bisa diakses
+
+---
+
+## 3. Admin Page - Payload Version Mismatch & Config
+
+**Masalah:**
+1. Mismatch versi Payload packages (@payloadcms/storage-vercel-blob@3.81.0 vs 3.75.0)
+2. `.env.local` tidak memiliki password database dan `NEXT_PUBLIC_PAYLOAD_URL`
+
+**Perbaikan:**
+1. Reinstall dependencies dengan pnpm untuk sinkronisasi versi
+2. Update `.env.local` dengan:
+   - Password database: `PGPASSWORD=password`
+   - `NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000`
+
+**Catatan:**
+- Build timeout terjadi karena database tidak running saat build
+- Static pages butuh koneksi database untuk generate content
+- Admin page butuh database PostgreSQL yang berjalan
+
+**Verifikasi:**
+- TypeScript: **PASS**
+- Dev server perlu dijalankan dengan database PostgreSQL yang aktif
+
+---
+
+## Konfigurasi yang Dibutuhkan untuk Menjalankan App
+
+### Prasyarat
+1. **PostgreSQL Database:** Pastikan PostgreSQL berjalan dan database `fathstore` ada
+2. **Kill proses Node.js lama:** Jika ada error "Port 3000 is in use", kill semua proses node:
+   ```bash
+   taskkill /F /IM node.exe
+   ```
+   Atau restart komputer Anda.
+
+### Langkah Setup
+1. **Reinstall dependencies:**
+   ```bash
+   rm -rf node_modules pnpm-lock.yaml
+   pnpm install
+   ```
+
+2. **Generate Payload types:**
+   ```bash
+   pnpm payload generate:types
+   pnpm payload generate:importmap
+   ```
+
+3. **Jalankan Migration (jika ada perubahan schema):**
+   ```bash
+   pnpm payload migrate
+   ```
+
+4. **Jalankan Dev Server:**
+   ```bash
+   pnpm dev
+   ```
+
+### Troubleshooting
+- **Error "packages have mismatched versions"**: Pastikan semua @payloadcms packages sama versinya (3.84.1)
+- **Error "Port 3000 is in use"**: Kill semua proses node.exe yang berjalan
+- **Database connection error**: Pastikan PostgreSQL berjalan dan .env.local punya password yang benar

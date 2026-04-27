@@ -4,6 +4,8 @@ import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/context/LanguageContext'
 
+import { BRAND } from '@/config/brand'
+
 export function StoreFooter({
   settings,
 }: {
@@ -117,7 +119,7 @@ export function StoreFooter({
 
         <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-zinc-300 pt-6 text-xs text-zinc-500 md:flex-row md:items-center">
           <p>
-            &copy; {new Date().getFullYear()} Exortive
+            &copy; {new Date().getFullYear()} {BRAND.name}
           </p>
           <Link href="/terms" className="transition-colors hover:text-zinc-800">Terms and Policies</Link>
         </div>

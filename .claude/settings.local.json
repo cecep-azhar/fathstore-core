@@ -9,7 +9,26 @@
       "Bash(rm -rf .next)",
       "Bash(npm install *)",
       "Bash(rm -rf node_modules)",
-      "Bash(rm package-lock.json)"
+      "Bash(rm package-lock.json)",
+      "Bash(taskkill /PID 82504 /F)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(rm -rf node_modules package-lock.json pnpm-lock.yaml)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm list *)",
+      "Bash(pnpm dev *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(taskkill /PID 5564 /F)",
+      "Bash(taskkill /PID 25660 /F)",
+      "Bash(taskkill /PID 81892 /F)",
+      "Bash(taskkill /PID 65124 /F)",
+      "Bash(taskkill /PID 70628 /F)",
+      "Bash(taskkill /PID 23344 /F)",
+      "Bash(tasklist)",
+      "Bash(findstr node *)",
+      "Bash(curl -s http://localhost:3001/admin)",
+      "Bash(taskkill /PID 82948 /F)"
     ]
   }
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, User, Loader2, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { BRAND } from '@/config/brand'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -53,13 +54,13 @@ export default function RegisterPage() {
         <div className="relative hidden lg:block">
           <img
             src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80"
-            alt="Exortive new member"
+            alt={`${BRAND.name} new member`}
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Create account</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight">Gabung Member Exortive</h1>
+            <h1 className="mt-3 text-4xl font-black tracking-tight">Gabung Member {BRAND.name}</h1>
             <p className="mt-3 text-sm text-white/80">Buat akun untuk lanjut ke dashboard, histori pesanan, dan profil Anda.</p>
           </div>
         </div>

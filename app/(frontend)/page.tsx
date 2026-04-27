@@ -2,6 +2,7 @@ import { getProducts } from '@/lib/store-payload'
 import { StoreProductCard } from '@/components/store/StoreProductCard'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { BRAND } from '@/config/brand'
 
 export default async function HomePage() {
   const productsData = await getProducts({ limit: 6 })
@@ -13,14 +14,14 @@ export default async function HomePage() {
       <section className="relative min-h-[420px] overflow-hidden sm:h-[65vh]">
         <img
           src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=1800&q=80"
-          alt="Exortive hero"
+          alt={`${BRAND.name} hero`}
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-10 mx-auto max-w-[1280px] px-6 lg:px-8">
           <p className="text-sm font-semibold text-white/75">Welcome</p>
           <h1 className="mt-2 max-w-2xl text-4xl font-black tracking-tight text-white sm:text-6xl">
-            We Exortive Passion
+            We {BRAND.name} Passion
           </h1>
         </div>
       </section>

@@ -30,7 +30,7 @@ export default function CheckoutPage() {
         <p className="text-muted-foreground text-lg mb-10 max-w-md mx-auto">
           Pesanan Anda telah kami terima dan sedang diproses. Konfirmasi pesanan telah dikirim ke email Anda.
         </p>
-        <Link href="/" className="btn-exortive-primary">
+        <Link href="/" className="btn-fathstore-primary">
           Kembali ke Beranda
         </Link>
       </div>
@@ -42,7 +42,7 @@ export default function CheckoutPage() {
       <div className="flex h-[80vh] flex-col items-center justify-center text-center p-6">
         <ShoppingBag className="h-16 w-16 text-muted-foreground mb-6" />
         <h1 className="text-2xl font-black uppercase tracking-tighter mb-4">Keranjang Kosong</h1>
-        <Link href="/" className="btn-exortive-primary">
+        <Link href="/" className="btn-fathstore-primary">
           Mulai Belanja
         </Link>
       </div>
@@ -62,16 +62,16 @@ export default function CheckoutPage() {
             <h2 className="text-3xl font-black uppercase tracking-tighter">Informasi Pengiriman</h2>
             <form onSubmit={handleOrder} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <input type="text" placeholder="Nama Depan" className="input-exortive" required />
-                <input type="text" placeholder="Nama Belakang" className="input-exortive" required />
+                <input type="text" placeholder="Nama Depan" className="input-fathstore" required />
+                <input type="text" placeholder="Nama Belakang" className="input-fathstore" required />
               </div>
-              <input type="email" placeholder="Email" className="input-exortive" required />
-              <input type="text" placeholder="Alamat Lengkap" className="input-exortive" required />
+              <input type="email" placeholder="Email" className="input-fathstore" required />
+              <input type="text" placeholder="Alamat Lengkap" className="input-fathstore" required />
               <div className="grid grid-cols-2 gap-4">
-                <input type="text" placeholder="Kota" className="input-exortive" required />
-                <input type="text" placeholder="Kode Pos" className="input-exortive" required />
+                <input type="text" placeholder="Kota" className="input-fathstore" required />
+                <input type="text" placeholder="Kode Pos" className="input-fathstore" required />
               </div>
-              <input type="tel" placeholder="Nomor Telepon" className="input-exortive" required />
+              <input type="tel" placeholder="Nomor Telepon" className="input-fathstore" required />
 
               <div className="pt-8">
                 <h3 className="text-xl font-black uppercase tracking-tighter mb-6 flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-exortive-primary w-full !py-6 !text-lg mt-8">
+              <button type="submit" className="btn-fathstore-primary w-full !py-6 !text-lg mt-8">
                 Buat Pesanan Sekarang
               </button>
             </form>

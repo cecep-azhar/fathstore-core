@@ -50,7 +50,7 @@ export function CartDrawer() {
                   </p>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="btn-exortive-primary"
+                    className="btn-fathstore-primary"
                   >
                     Mulai Belanja
                   </button>
@@ -140,14 +140,14 @@ export function CartDrawer() {
                   <Link
                     href="/checkout"
                     onClick={() => setIsOpen(false)}
-                    className="btn-exortive-primary w-full flex items-center justify-center gap-2 group"
+                    className="btn-fathstore-primary w-full flex items-center justify-center gap-2 group"
                   >
                     Proses Checkout
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Link>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="btn-exortive-secondary w-full"
+                    className="btn-fathstore-secondary w-full"
                   >
                     Lanjutkan Belanja
                   </button>

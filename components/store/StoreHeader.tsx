@@ -8,6 +8,8 @@ import { useCart } from '@/context/CartContext'
 import { useLanguage } from '@/context/LanguageContext'
 import { useAuth } from '@/providers/AuthProvider'
 
+import { BRAND } from '@/config/brand'
+
 export function StoreHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -47,9 +49,9 @@ export function StoreHeader() {
 
             <Link
               href="/"
-              className="absolute left-1/2 -translate-x-1/2 text-lg font-black italic tracking-[0.18em] text-zinc-900 sm:text-xl"
+              className="absolute left-1/2 -translate-x-1/2 text-lg font-black italic tracking-[0.18em] text-zinc-900 sm:text-xl uppercase"
             >
-              EXORTIVE
+              {BRAND.name}
             </Link>
 
             <div className="ml-auto flex items-center gap-1 sm:gap-2">
