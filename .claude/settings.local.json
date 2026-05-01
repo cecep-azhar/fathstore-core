@@ -28,7 +28,13 @@
       "Bash(tasklist)",
       "Bash(findstr node *)",
       "Bash(curl -s http://localhost:3001/admin)",
-      "Bash(taskkill /PID 82948 /F)"
+      "Bash(taskkill /PID 82948 /F)",
+      "Bash(dir \"D:\\\\01_WEB\\\\01_Projects\\\\fathstore-core\\\\notes\\\\\")",
+      "Bash(Get-ChildItem *)",
+      "Bash(mkdir -p \"D:/01_WEB/01_Projects/fathstore-core/app/api/v1/orders/[id]/tracking\")",
+      "Bash(mkdir -p \"D:/01_WEB/01_Projects/fathstore-core/app/api/v1/orders/[id]/status\")",
+      "Bash(mkdir -p \"D:/01_WEB/01_Projects/fathstore-core/app/api/v1/wishlist/[id]\")",
+      "Bash(mkdir -p \"D:/01_WEB/01_Projects/fathstore-core/app/api/v1/seed/[brand]\")"
     ]
   }
 }

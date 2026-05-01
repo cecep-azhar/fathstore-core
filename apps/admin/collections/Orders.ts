@@ -375,6 +375,103 @@ export const Orders: CollectionConfig = {
       },
     },
 
+    // ── Delivery Source & Type ──────────────────────────
+    {
+      name: 'deliverySource',
+      type: 'select',
+      required: false,
+      defaultValue: 'webstore',
+      label: 'Delivery Source',
+      options: [
+        { label: 'Webstore', value: 'webstore' },
+        { label: 'POS', value: 'pos' },
+        { label: 'Member App', value: 'member_app' },
+        { label: 'Manual', value: 'manual' },
+      ],
+      admin: {
+        description: 'Where the order was created',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'deliveryType',
+      type: 'select',
+      required: false,
+      defaultValue: 'expedition',
+      label: 'Delivery Type',
+      options: [
+        { label: 'Expedition (JNE/J&T/etc)', value: 'expedition' },
+        { label: 'Internal (Kurir Sendiri)', value: 'internal' },
+      ],
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'posTransactionId',
+      type: 'text',
+      required: false,
+      label: 'POS Transaction ID',
+      admin: {
+        description: 'ID transaksi POS jika order berasal dari kasir',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'deliveryAssignment',
+      type: 'relationship',
+      relationTo: 'delivery-assignments',
+      required: false,
+      label: 'Delivery Assignment',
+      admin: {
+        description: 'Link ke penugasan driver internal',
+        position: 'sidebar',
+      },
+    },
+
+    // ── Loyalty Points ─────────────────────────────────
+    {
+      name: 'loyaltyPointsEarned',
+      type: 'number',
+      defaultValue: 0,
+      label: 'Loyalty Points Earned',
+      admin: {
+        description: 'Poin yang diperoleh saat order ini selesai',
+        readOnly: true,
+      },
+    },
+    {
+      name: 'loyaltyPointsRedeemed',
+      type: 'number',
+      defaultValue: 0,
+      label: 'Loyalty Points Redeemed',
+      admin: {
+        description: 'Poin yang digunakan untuk diskon di order ini',
+        readOnly: true,
+      },
+    },
+
+    // ── COD ────────────────────────────────────────────
+    {
+      name: 'isCOD',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Cash on Delivery',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'codAmount',
+      type: 'number',
+      required: false,
+      label: 'COD Amount (Rp)',
+      admin: {
+        description: 'Jumlah yang harus dibayar saat pengiriman',
+        position: 'sidebar',
+      },
+    },
+
 
 
     // ── Notes ─────────────────────────────────────────────

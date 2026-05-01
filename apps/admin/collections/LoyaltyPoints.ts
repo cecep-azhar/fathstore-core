@@ -25,6 +25,15 @@ export const LoyaltyPoints: C = ({ slug: 'loyalty-points' }) => ({
       },
     },
     {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: true,
+      admin: {
+        description: 'Brand/tenant this loyalty transaction belongs to',
+      },
+    },
+    {
       name: 'points',
       type: 'number',
       required: true,

@@ -32,9 +32,11 @@ export const Users: CollectionConfig = {
       defaultValue: 'member',
       label: 'Role',
       options: [
+        { label: 'Super Admin', value: 'superadmin' },
         { label: 'Admin', value: 'admin' },
         { label: 'Merchant', value: 'merchant' },
         { label: 'Member', value: 'member' },
+        { label: 'Driver', value: 'driver' },
       ],
       admin: {
         position: 'sidebar',
@@ -145,6 +147,28 @@ export const Users: CollectionConfig = {
       admin: {
         description: 'Groups this customer belongs to',
         position: 'sidebar',
+      },
+    },
+
+    // ── Referral Code ────────────────────────────────────
+    {
+      name: 'referralCode',
+      type: 'text',
+      required: false,
+      label: 'Referral Code',
+      admin: {
+        description: 'Unique code for referral program — auto-generated on first use',
+        readOnly: true,
+      },
+    },
+    {
+      name: 'referredBy',
+      type: 'relationship',
+      relationTo: 'users',
+      required: false,
+      label: 'Referred By',
+      admin: {
+        description: 'User who referred this customer',
       },
     },
 

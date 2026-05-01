@@ -24,6 +24,7 @@ import { Cities } from './collections/Locations/Cities.ts'
 import { Districts } from './collections/Locations/Districts.ts'
 import { Subdistricts } from './collections/Locations/Subdistricts.ts'
 import { Pages } from './collections/Pages.ts'
+import { AddressBooks } from './collections/AddressBooks.ts'
 import { Wishlists } from './collections/Wishlists.ts'
 import { OrderTracking } from './collections/OrderTracking.ts'
 import { CustomerGroups } from './collections/CustomerGroups.ts'
@@ -42,9 +43,19 @@ import { Affiliates, AffiliateReferrals, AffiliatePayments } from './collections
 import { Warehouses, Inventory, InventoryTransfers } from './collections/Inventory.ts'
 
 // Globals
-import { Settings } from './globals/Settings.ts'
+import { Memberships } from './collections/Memberships.ts'
+import { Referrals } from './collections/Referrals.ts'
+import { Notifications } from './collections/Notifications.ts'
+import { Drivers } from './collections/Drivers.ts'
+import { DeliveryAssignments } from './collections/DeliveryAssignments.ts'
+import { PosOutlets } from './collections/PosOutlets.ts'
+import { PosShifts } from './collections/PosShifts.ts'
+import { PosTransactions } from './collections/PosTransactions.ts'
+import { PosTables } from './collections/PosTables.ts'
+import { StockAdjustments } from './collections/StockAdjustments.ts'
 
-const filename = fileURLToPath(import.meta.url)
+// Globals
+import { Settings } from './globals/Settings.ts' = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
@@ -85,6 +96,7 @@ export default buildConfig({
     Districts,
     Subdistricts,
     Wishlists,
+    AddressBooks,
     OrderTracking,
     CustomerGroups,
     GiftCards,
@@ -113,6 +125,16 @@ export default buildConfig({
     Warehouses,
     Inventory,
     InventoryTransfers,
+    Memberships,
+    Referrals,
+    Notifications,
+    Drivers,
+    DeliveryAssignments,
+    PosOutlets,
+    PosShifts,
+    PosTransactions,
+    PosTables,
+    StockAdjustments,
   ],
   globals: [Settings],
   editor: lexicalEditor({}),

@@ -367,11 +367,12 @@ export const Products: CollectionConfig = {
     },
     {
       name: 'vendor',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'tenants',
       required: false,
-      label: 'Vendor',
+      label: 'Brand / Tenant',
       admin: {
-        description: 'Brand or manufacturer name',
+        description: 'Associate this product with a specific brand/tenant. Used for brand-filtering in multi-tenant stores.',
       },
     },
     {
