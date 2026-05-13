@@ -69,6 +69,8 @@ export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
+export const PATCH = PUT
+
 export const DELETE = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const { id } = await params

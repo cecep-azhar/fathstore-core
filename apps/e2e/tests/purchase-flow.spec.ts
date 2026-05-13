@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const STORE_URL = 'http://localhost:3001';
 const ADMIN_URL = 'http://localhost:3000';
-const MEMBER_URL = 'http://localhost:3002';
+const MEMBER_URL = 'http://localhost:3001';
 
 // Use a unique email for each test run to avoid collision
 const testEmail = `testuser_${Date.now()}@example.com`;

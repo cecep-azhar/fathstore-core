@@ -99,9 +99,24 @@ export async function GET(request: Request) {
     const rows = result.docs.map((doc: any) => {
       const row: Record<string, any> = {}
       config.columns.forEach(col => {
-        const value = col.includes('.')
-          ? col.split('.').reduce((obj, key) => obj?.[key], doc)
-          : doc[col]
+        let value: any
+
+        if (col.includes('.')) {
+          // Handle nested property access (e.g. 'customer.name', 'category.name')
+          const keys = col.split('.')
+          value = doc
+          for (const key of keys) {
+            if (value == null) break
+            // If current value is a number (ID) and we're trying to go deeper, it means not populated
+            if (typeof value === 'number' || typeof value === 'string') {
+              value = null
+              break
+            }
+            value = value[key]
+          }
+        } else {
+          value = doc[col]
+        }
 
         // Format values
         if (col === 'createdAt' && value) {

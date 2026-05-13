@@ -3,6 +3,52 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getAuthUser } from '@/lib/auth-helpers'
 
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  try {
+    const { id } = await params
+    const user = getAuthUser(req)
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const payload = await getPayload({ config })
+    const order = await payload.findByID({
+      collection: 'orders',
+      id,
+    })
+
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+    }
+
+    if (user.role !== 'admin' && order.customer !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    const tracking = await payload.find({
+      collection: 'order-tracking',
+      where: { order: { equals: id } },
+      sort: '-createdAt',
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        trackingNumber: order.trackingNumber,
+        shippingCarrier: order.shippingCarrier,
+        shippingService: order.shippingService,
+        history: tracking.docs || [],
+      },
+    })
+  } catch (error: any) {
+    console.error('[GET /api/v1/orders/[id]/tracking]', error)
+    return NextResponse.json({ error: 'Failed to get tracking' }, { status: 500 })
+  }
+}
+
 export const PUT = async (
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

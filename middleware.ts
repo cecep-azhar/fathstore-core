@@ -1,80 +1,85 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// Simple JWT decode without external library
-function decodeJWT(token: string): any | null {
-  try {
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
-    const payload = Buffer.from(parts[1], 'base64').toString('utf-8')
-    return JSON.parse(payload)
-  } catch {
-    return null
-  }
-}
-
-// Routes that need authentication
-const PROTECTED_PATHS = [
-  '/api/v1/addresses',
-  '/api/v1/loyalty',
-  '/api/v1/wishlist',
-  '/api/v1/notifications',
-  '/api/v1/delivery',
-  '/api/v1/pos',
-  '/api/v1/referral',
-  '/api/v1/orders',
-]
-
-// Public routes (no auth required)
-const PUBLIC_PATHS = [
-  '/api/v1/brands',
-  '/api/v1/seed',
-  '/api/v1/shipping/providers',
-  '/api/v1/courier/track',
-  '/api/v1/delivery/track',
-  '/api/v1/payments/qris/status',
-  '/api/v1/payments/midtrans/status',
-]
+import { decodeJWT } from '@/lib/auth'
+import { ALLOWED_ORIGINS, PROTECTED_PATHS, PUBLIC_PATHS } from '@/lib/config'
 
 export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname
+  const origin = req.headers.get('origin') || ''
 
-  // Check if this path needs auth
+  // ── CORS preflight ─────────────────────────────────────────
+  if (req.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 204 })
+    const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+    response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key')
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+    response.headers.set('Access-Control-Max-Age', '86400')
+    return response
+  }
+
+  // ── Determine if path needs auth ───────────────────────────
   const needsAuth = PROTECTED_PATHS.some((path) => pathname.startsWith(path))
   const isPublic = PUBLIC_PATHS.some((path) => pathname.startsWith(path))
 
-  if (!needsAuth && !isPublic) {
-    return NextResponse.next()
+  const response = NextResponse.next()
+
+  // ── CORS headers for all responses ─────────────────────────
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin)
+  }
+  response.headers.set('Access-Control-Allow-Credentials', 'true')
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key')
+
+  // Public or not protected — pass through
+  if (!needsAuth || isPublic) {
+    return response
   }
 
-  // Skip auth for public paths
-  if (isPublic) {
-    return NextResponse.next()
-  }
-
-  // Extract token from Authorization header
+  // ── Auth check ──────────────────────────────────────────────
   const authHeader = req.headers.get('authorization')
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ error: 'Missing or invalid Authorization header' }, { status: 401 })
+
+  // Support both "Bearer <token>" and "JWT <token>" formats
+  let token = ''
+  if (authHeader?.startsWith('Bearer ')) {
+    token = authHeader.substring(7)
+  } else if (authHeader?.startsWith('JWT ')) {
+    token = authHeader.substring(4)
   }
 
-  const token = authHeader.substring(7)
+  if (!token) {
+    const errorResponse = NextResponse.json(
+      { error: 'Missing Authorization header', data: null },
+      { status: 401 }
+    )
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      errorResponse.headers.set('Access-Control-Allow-Origin', origin)
+    }
+    errorResponse.headers.set('Access-Control-Allow-Credentials', 'true')
+    return errorResponse
+  }
+
   const decoded = decodeJWT(token)
 
   if (!decoded || !decoded.id) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    const errorResponse = NextResponse.json(
+      { error: 'Invalid or expired token', data: null },
+      { status: 401 }
+    )
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      errorResponse.headers.set('Access-Control-Allow-Origin', origin)
+    }
+    errorResponse.headers.set('Access-Control-Allow-Credentials', 'true')
+    return errorResponse
   }
 
-  // Add user info to headers for route handlers
-  const requestHeaders = new Headers(req.headers)
-  requestHeaders.set('x-user-id', decoded.id)
-  requestHeaders.set('x-user-role', decoded.role || 'member')
+  // Inject decoded user info into request headers for downstream use
+  response.headers.set('x-user-id', decoded.id as string)
+  response.headers.set('x-user-role', (decoded.role as string) || 'member')
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  })
+  return response
 }
 
 export const config = {

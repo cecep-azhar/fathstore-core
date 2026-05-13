@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest) => {
     const page = parseInt(searchParams.get('page') || '1', 10)
     const unreadOnly = searchParams.get('unreadOnly') === 'true'
 
-    const payload = await getPayload({ config })
+    const payload = await getPayload({ config }) as any
 
     const where: any = { user: { equals: user.id } }
     if (unreadOnly) {

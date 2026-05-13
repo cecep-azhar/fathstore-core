@@ -1,61 +1,44 @@
+/**
+ * @deprecated Use POST /api/v1/orders/[id]/approve instead
+ * This route is kept for backward compatibility only.
+ * Will be removed in v2.0. Please migrate to /api/v1/orders/[id]/approve
+ */
+
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  // Proxy to new endpoint
+  const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3000'
+
   try {
-    const { id } = await params
     const { status } = await request.json()
 
     if (!['approved', 'failed'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
     }
 
-    // Update transaction status
-    const transactionResponse = await fetch(`http://localhost:3000/api/transactions/${id}`, {
-      method: 'PATCH',
+    const response = await fetch(`${baseUrl}/api/v1/orders/${id}/approve`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Legacy-Proxy': 'true',
       },
-      body: JSON.stringify({
-        status,
-        approvalDate: status === 'approved' ? new Date().toISOString() : undefined,
-      }),
+      body: JSON.stringify({ status }),
     })
 
-    if (!transactionResponse.ok) {
-      throw new Error('Failed to update transaction')
-    }
+    const data = await response.json()
 
-    const transaction = await transactionResponse.json()
-
-    // If approved, update enrollment status
-    if (status === 'approved') {
-      const enrollmentsResponse = await fetch(
-        `http://localhost:3000/api/enrollments?where[userId][equals]=${transaction.userId}&where[materialId][equals]=${transaction.materialId}`,
-        { cache: 'no-store' }
-      )
-
-      if (enrollmentsResponse.ok) {
-        const enrollmentsData = await enrollmentsResponse.json()
-
-        if (enrollmentsData.docs.length > 0) {
-          const enrollment = enrollmentsData.docs[0]
-
-          await fetch(`http://localhost:3000/api/enrollments/${enrollment.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              status: 'purchased',
-            }),
-          })
-        }
-      }
-    }
-
-    return NextResponse.json({ success: true, transaction })
+    return NextResponse.json(data, {
+      status: response.status,
+      headers: {
+        'X-Deprecated': 'true',
+        'X-Migrate-To': `/api/v1/orders/${id}/approve`,
+      },
+    })
   } catch (error) {
-    console.error('Approve transaction error:', error)
+    console.error('[LEGACY] Approve transaction error:', error)
     return NextResponse.json({ error: 'Failed to approve transaction' }, { status: 500 })
   }
 }

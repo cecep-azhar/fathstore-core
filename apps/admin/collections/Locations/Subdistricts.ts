@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { isAdmin } from '../../access/index'
+import { isAdmin } from '../../access/index.ts'
 
 export const Subdistricts: CollectionConfig = {
   slug: 'subdistricts',

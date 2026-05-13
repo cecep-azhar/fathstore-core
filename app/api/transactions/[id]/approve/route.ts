@@ -9,8 +9,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
     }
 
+    const payloadUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3000'
+
     // Update transaction status
-    const transactionResponse = await fetch(`http://localhost:3000/api/transactions/${id}`, {
+    const transactionResponse = await fetch(`${payloadUrl}/api/transactions/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +32,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // If approved, update enrollment status
     if (status === 'approved') {
       const enrollmentsResponse = await fetch(
-        `http://localhost:3000/api/enrollments?where[userId][equals]=${transaction.userId}&where[materialId][equals]=${transaction.materialId}`,
+        `${payloadUrl}/api/enrollments?where[userId][equals]=${transaction.userId}&where[materialId][equals]=${transaction.materialId}`,
         { cache: 'no-store' }
       )
 
@@ -40,7 +42,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         if (enrollmentsData.docs.length > 0) {
           const enrollment = enrollmentsData.docs[0]
 
-          await fetch(`http://localhost:3000/api/enrollments/${enrollment.id}`, {
+          await fetch(`${payloadUrl}/api/enrollments/${enrollment.id}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',

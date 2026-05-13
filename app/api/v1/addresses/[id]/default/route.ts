@@ -3,7 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getAuthUser } from '@/lib/auth-helpers'
 
-export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+async function setDefaultAddress(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
     const user = getAuthUser(req)
@@ -39,7 +39,10 @@ export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: 
       data: updated,
     })
   } catch (error: any) {
-    console.error('[PUT /api/v1/addresses/:id/default]', error)
+    console.error('[PATCH/PUT /api/v1/addresses/:id/default]', error)
     return NextResponse.json({ error: 'Failed to set default address' }, { status: 500 })
   }
 }
+
+export const PUT = setDefaultAddress
+export const PATCH = setDefaultAddress

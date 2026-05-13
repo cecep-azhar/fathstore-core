@@ -8,7 +8,7 @@
  * Requires Payload Admin running at http://localhost:3001
  */
 
-const API_URL = 'http://localhost:3000/api' // Payload Admin (admin app) runs on port 3000
+const API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3000/api'
 const ADMIN_EMAIL = 'cecep.azhtech@gmail.com'
 const ADMIN_PASSWORD = '12345678'
 

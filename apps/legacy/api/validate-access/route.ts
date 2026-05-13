@@ -1,6 +1,14 @@
+/**
+ * @deprecated Use POST /api/v1/access/validate instead
+ * This route is kept for backward compatibility only.
+ * Will be removed in v2.0. Please migrate to /api/v1/access/validate
+ */
+
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
+  const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3000'
+
   try {
     const { userId, materialId } = await request.json()
 
@@ -8,31 +16,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Check if user has access to the material
-    const enrollmentsResponse = await fetch(
-      `http://localhost:3000/api/enrollments?where[userId][equals]=${userId}&where[materialId][equals]=${materialId}`,
-      { cache: 'no-store' }
-    )
+    // Proxy to new endpoint
+    const response = await fetch(`${baseUrl}/api/v1/access/validate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Legacy-Proxy': 'true',
+      },
+      body: JSON.stringify({ userId, materialId }),
+    })
 
-    if (!enrollmentsResponse.ok) {
-      return NextResponse.json({ hasAccess: false, reason: 'No enrollment found' }, { status: 200 })
-    }
+    const data = await response.json()
 
-    const enrollmentsData = await enrollmentsResponse.json()
-
-    if (enrollmentsData.docs.length === 0) {
-      return NextResponse.json({ hasAccess: false, reason: 'Not enrolled' }, { status: 200 })
-    }
-
-    const enrollment = enrollmentsData.docs[0]
-
-    if (enrollment.status === 'purchased' || enrollment.status === 'completed') {
-      return NextResponse.json({ hasAccess: true, enrollment }, { status: 200 })
-    }
-
-    return NextResponse.json({ hasAccess: false, reason: 'Payment not approved' }, { status: 200 })
+    return NextResponse.json(data, {
+      status: response.status,
+      headers: {
+        'X-Deprecated': 'true',
+        'X-Migrate-To': '/api/v1/access/validate',
+      },
+    })
   } catch (error) {
-    console.error('Access validation error:', error)
+    console.error('[LEGACY] Access validation error:', error)
     return NextResponse.json({ error: 'Failed to validate access' }, { status: 500 })
   }
 }

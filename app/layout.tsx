@@ -1,18 +1,7 @@
-import type { Metadata } from 'next'
-import './globals.css'
-
-export const metadata: Metadata = {
-  title: 'Fathstore - Online Shop System',
-  description: 'Online Shop System for Business',
-}
+// d:\01_WEB\01_Projects\fathstore-core\app\layout.tsx
+// PENTING: File ini seharusnya DIHAPUS agar tidak bentrok dengan layout di (frontend) dan (payload).
+// Jika Anda tidak bisa menghapusnya, biarkan seperti ini agar tidak merusak struktur HTML.
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="id" suppressHydrationWarning>
-      <body className="min-h-screen bg-white text-gray-900 antialiased">
-        {children}
-      </body>
-    </html>
-  )
+  return children
 }
-

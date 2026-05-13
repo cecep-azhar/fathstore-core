@@ -1,6 +1,6 @@
-import { CollectionConfig, Block } from 'payload'
+import type { CollectionConfig } from 'payload'
 
-const Hero: Block = {
+const Hero = {
   slug: 'hero',
   labels: {
     singular: 'Hero Section',
@@ -58,7 +58,7 @@ const Hero: Block = {
   ],
 }
 
-const Content: Block = {
+const Content = {
   slug: 'content',
   labels: {
     singular: 'Content Section',
@@ -94,7 +94,7 @@ const Content: Block = {
   ],
 }
 
-const Stats: Block = {
+const Stats = {
   slug: 'stats',
   labels: {
     singular: 'Statistics Section',
@@ -130,7 +130,7 @@ const Stats: Block = {
   ],
 }
 
-const FeaturedProducts: Block = {
+const FeaturedProducts = {
   slug: 'featuredProducts',
   labels: {
     singular: 'Featured Products Section',

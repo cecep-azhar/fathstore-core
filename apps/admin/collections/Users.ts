@@ -150,6 +150,24 @@ export const Users: CollectionConfig = {
       },
     },
 
+    // ── Customer Category ─────────────────────────────────
+    {
+      name: 'category',
+      type: 'select',
+      required: false,
+      label: 'Category',
+      options: [
+        { label: 'Member', value: 'member' },
+        { label: 'VIP', value: 'vip' },
+        { label: 'Wholesale', value: 'wholesale' },
+        { label: 'Corporate', value: 'corporate' },
+      ],
+      admin: {
+        description: 'Customer category for segmentation',
+        position: 'sidebar',
+      },
+    },
+
     // ── Referral Code ────────────────────────────────────
     {
       name: 'referralCode',

@@ -41,8 +41,6 @@ import { EmailTemplates, EmailLogs, EmailCampaigns } from './collections/EmailAu
 import { SubscriptionPlans, Subscriptions, SubscriptionPayments } from './collections/Subscriptions.ts'
 import { Affiliates, AffiliateReferrals, AffiliatePayments } from './collections/Affiliates.ts'
 import { Warehouses, Inventory, InventoryTransfers } from './collections/Inventory.ts'
-
-// Globals
 import { Memberships } from './collections/Memberships.ts'
 import { Referrals } from './collections/Referrals.ts'
 import { Notifications } from './collections/Notifications.ts'
@@ -53,9 +51,13 @@ import { PosShifts } from './collections/PosShifts.ts'
 import { PosTransactions } from './collections/PosTransactions.ts'
 import { PosTables } from './collections/PosTables.ts'
 import { StockAdjustments } from './collections/StockAdjustments.ts'
+import { QRISSessions } from './collections/QRISSessions.ts'
+import { ShippingAPILogs } from './collections/ShippingAPILogs.ts'
 
 // Globals
-import { Settings } from './globals/Settings.ts' = fileURLToPath(import.meta.url)
+import { Settings } from './globals/Settings.ts'
+
+const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
@@ -135,6 +137,8 @@ export default buildConfig({
     PosTransactions,
     PosTables,
     StockAdjustments,
+    QRISSessions,
+    ShippingAPILogs,
   ],
   globals: [Settings],
   editor: lexicalEditor({}),
@@ -149,8 +153,8 @@ export default buildConfig({
     push: process.env.PAYLOAD_PUSH === 'true',
   }),
   sharp,
-  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || '', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'].filter(Boolean),
-  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || '', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'].filter(Boolean),
+  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || '', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'].filter(Boolean),
+  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || '', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'].filter(Boolean),
   i18n: {
     supportedLanguages: { id, en },
   },

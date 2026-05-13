@@ -9,8 +9,9 @@ export async function POST(request: Request) {
     }
 
     // Check if user has access to the material
+    const payloadUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3000'
     const enrollmentsResponse = await fetch(
-      `http://localhost:3000/api/enrollments?where[userId][equals]=${userId}&where[materialId][equals]=${materialId}`,
+      `${payloadUrl}/api/enrollments?where[userId][equals]=${userId}&where[materialId][equals]=${materialId}`,
       { cache: 'no-store' }
     )
 
